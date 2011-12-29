@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : tv.xml
+    Created on : 23 грудня 2011, 19:34
+    Author     : Stanislav Nepochatov
+    Description:
+        Program default configuration.
+-->
+
+<properties>
+    <begin-stamp>
+        0
+    </begin-stamp>
+    <processing-stamp>
+        0
+    </processing-stamp>
+    <end-stamp>
+        0
+    </end-stamp>
+    <tv-list>
+        <ch-entry oid="1" fid="1">
+            <name>
+                Test channel
+            </name>
+            <filename>
+                null
+            </filename>
+        </ch-entry>
+    </tv-list>
+</properties>

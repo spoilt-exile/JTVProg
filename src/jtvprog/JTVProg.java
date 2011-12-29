@@ -1,5 +1,5 @@
 /*
- * JTVProg is a service software for Ukrainian National Information Agency:
+ * JTVProg is a service software for National News Agency of Ukraine:
  * UKRINFORM 2011
  * v0.1
  */
@@ -15,6 +15,26 @@ public class JTVProg {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        logPrint("JTVProg", 3, "старт программы ");
+        mainFrame mainWindow = new mainFrame();
+    }
+    
+    public static void logPrint(String component, int type, String message) {
+        String typeStr = "неизвестно";
+        switch (type) {
+            case 0:
+                typeStr = "критическая ошибка";
+                break;
+            case 1:
+                typeStr = "ошибка";
+                break;
+            case 2:
+                typeStr = "предупреждение";
+                break;
+            case 3:
+                typeStr = "сообщение";
+                break;
+        }
+        System.out.println("["+ component + "]: " + typeStr + ">> '" + message + "';");
     }
 }
