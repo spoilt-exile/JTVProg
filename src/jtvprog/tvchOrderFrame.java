@@ -1,26 +1,45 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * This code is distributed under terms of GNU GPLv2.
+ * *See LICENSE file.
+ * ©UKRINFORM 2011-2012
  */
 
-/*
- * tvchOrderFrame.java
- *
- * Created on 25 груд 2011, 17:07:06
- */
 package jtvprog;
 
+import javax.swing.*;
+
 /**
- *
- * @author spoilt
+ * Fill order modify window class
+ * @author Stanislav Nepochatov
  */
 public class tvchOrderFrame extends javax.swing.JDialog {
+    
+    /**
+     * Local set of channels;
+     */
+    private chSet localSet = new jtvprog.chSet(JTVProg.configer.Channels.pullList());
+    
+    /**
+     * List model for channel list
+     */
+    private DefaultListModel chListModel = new DefaultListModel();
 
     /** Creates new form tvchOrderFrame */
     public tvchOrderFrame(java.awt.Frame parent) {
         super(parent, true);
         initComponents();
         JTVProg.logPrint("tvchOrderFrame", 3, "показ окна");
+        this.fillChannelList();
+        System.out.println(localSet.equals(JTVProg.configer.Channels));
+    }
+    
+    /**
+     * Fill jList by channels;
+     */
+    private void fillChannelList() {
+        for (Integer chCounter = 1; chCounter < localSet.getSetSize() + 1; chCounter++) {
+            chListModel.addElement(localSet.getChannelByROrder(chCounter));
+        }
     }
 
     /** This method is called from within the constructor to
@@ -33,23 +52,52 @@ public class tvchOrderFrame extends javax.swing.JDialog {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        tvOrderList = new javax.swing.JList();
+        tvOrderList = new JList(this.chListModel);
         moveUpBut = new javax.swing.JButton();
         moveDownBut = new javax.swing.JButton();
         cancelBut = new javax.swing.JButton();
         saveBut = new javax.swing.JButton();
 
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Порядок выпуска");
 
+        tvOrderList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tvOrderList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                tvOrderListValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(tvOrderList);
 
         moveUpBut.setText("↑");
+        moveUpBut.setEnabled(false);
+        moveUpBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                moveUpButActionPerformed(evt);
+            }
+        });
 
         moveDownBut.setText("↓");
+        moveDownBut.setEnabled(false);
+        moveDownBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                moveDownButActionPerformed(evt);
+            }
+        });
 
         cancelBut.setText("Отмена");
+        cancelBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButActionPerformed(evt);
+            }
+        });
 
         saveBut.setText("Сохранить");
+        saveBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -89,6 +137,76 @@ public class tvchOrderFrame extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void cancelButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_cancelButActionPerformed
+
+    private void moveUpButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveUpButActionPerformed
+        Integer selectedIndex = this.tvOrderList.getSelectedIndex();
+        if (selectedIndex != 0) {
+            Object aObject = chListModel.getElementAt(selectedIndex);
+            Object bObject = chListModel.getElementAt(selectedIndex - 1);
+            chListModel.set(selectedIndex, bObject);
+            chListModel.set(selectedIndex - 1, aObject);
+            this.tvOrderList.setSelectedIndex(selectedIndex - 1);
+            this.tvOrderList.ensureIndexIsVisible(selectedIndex - 1);
+            JTVProg.logPrint(this, 3, "сдвиг канала [" + (String) this.tvOrderList.getSelectedValue() + "] на позицию вверх");
+            this.localSet.moveChannelReleaseUp(selectedIndex);
+        }
+        else {
+            JTVProg.logPrint(this, 2, "канал уже наверху!");
+        }
+        /**Integer selectedIndex = this.tvOrderList.getSelectedIndex();
+        JTVProg.logPrint(this, 3, "сдвиг канала [" + (String) this.tvOrderList.getSelectedValue() + "] на позицию вверх");
+        this.localSet.moveChannelFillUp(selectedIndex);
+        ListModel resModel = JTVProg.configer.refreshFillOrder();
+        this.tvOrderList.setModel(resModel);**/
+    }//GEN-LAST:event_moveUpButActionPerformed
+
+    private void moveDownButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveDownButActionPerformed
+        Integer selectedIndex = this.tvOrderList.getSelectedIndex();
+        if (selectedIndex != chListModel.getSize() - 1) {
+            Object aObject = chListModel.getElementAt(selectedIndex);
+            Object bObject = chListModel.getElementAt(selectedIndex + 1);
+            chListModel.set(selectedIndex, bObject);
+            chListModel.set(selectedIndex + 1, aObject);
+            this.tvOrderList.setSelectedIndex(selectedIndex + 1);
+            this.tvOrderList.ensureIndexIsVisible(selectedIndex + 1);
+            JTVProg.logPrint(this, 3, "сдвиг канала [" + (String) this.tvOrderList.getSelectedValue() + "] на позицию вниз");
+            this.localSet.moveChannelReleaseDown(selectedIndex);
+        }
+        else {
+            JTVProg.logPrint(this, 2, "канал уже внизу!");
+        }
+        /**Integer selectedIndex = this.tvOrderList.getSelectedIndex();
+        JTVProg.logPrint(this, 3, "сдвиг канала [" + (String) this.tvOrderList.getSelectedValue() + "] на позицию вниз");
+        this.localSet.moveChannelFillDown(selectedIndex);
+        ListModel resModel = JTVProg.configer.refreshFillOrder();
+        this.tvOrderList.setModel(resModel);**/
+    }//GEN-LAST:event_moveDownButActionPerformed
+
+    private void saveButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButActionPerformed
+        JTVProg.logPrint(this, 2, "обновление списка каналов:\n" + localSet.toString());
+        JTVProg.configer.Channels.pushList(localSet.pullList());
+        this.dispose();
+    }//GEN-LAST:event_saveButActionPerformed
+
+    private void tvOrderListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_tvOrderListValueChanged
+        Integer selectedIndex = this.tvOrderList.getSelectedIndex();
+        if (selectedIndex == 0) {
+            this.moveUpBut.setEnabled(false);
+            this.moveDownBut.setEnabled(true);
+        }
+        else if (selectedIndex == this.localSet.getSetSize() - 1) {
+            this.moveUpBut.setEnabled(true);
+            this.moveDownBut.setEnabled(false);
+        }
+        else {
+            this.moveUpBut.setEnabled(true);
+            this.moveDownBut.setEnabled(true);
+        }
+    }//GEN-LAST:event_tvOrderListValueChanged
 
     /**
      * @param args the command line arguments

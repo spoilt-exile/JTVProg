@@ -1,0 +1,33 @@
+JTVProg readme
+
+JTVProg is a service application which developed in National News Agency of Ukraine 
+(Ukrinform) for prepearing, processing and releasing TV program. Source code of this 
+application is distributing under terms of GNU GPLv2 license (see LICENSE file).
+
+
+CHANGELOG
+
+==========================================================================================
+JTVProg init commit (07.12.11)
+
+Changes:
+ + added main skeleton of application;
+==========================================================================================
+JTVProg second draft (29.12.11)
+
+Changes:
+ + added main windows and frames;
+ + added configuration dealing object;
+==========================================================================================
+JTVProg third draft (11.02.2012)
+
+Changes:
+ + added support for configuration reading (XML support);
+ + added chSet class for storing and managing channels list;
+ + added ability to manipulate channels list;
+==========================================================================================
+
+
+COPYRIGHT
+
+© Ukrinform 2011-2012.

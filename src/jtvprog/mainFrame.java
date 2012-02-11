@@ -1,17 +1,13 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * This code is distributed under terms of GNU GPLv2.
+ * *See LICENSE file.
+ * ©UKRINFORM 2011-2012
  */
 
-/*
- * mainFrame.java
- *
- * Created on 23 груд 2011, 12:32:08
- */
 package jtvprog;
 
 /**
- *
+ * Class of main JTVProg window
  * @author Stanislav Nepochatov
  */
 public class mainFrame extends javax.swing.JFrame {
@@ -20,7 +16,7 @@ public class mainFrame extends javax.swing.JFrame {
     public mainFrame() {
         initComponents();
         this.setVisible(true);
-        JTVProg.logPrint("mainFrame", 3, "показ главного окна");
+        JTVProg.logPrint(this, 3, "показ главного окна");
     }
 
     /** This method is called from within the constructor to
@@ -55,7 +51,7 @@ public class mainFrame extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Канал", "Сохранен?", "Обработан?"
+                "Название канала", "Обработан?", "Сохранен?"
             }
         ) {
             Class[] types = new Class [] {
@@ -77,6 +73,11 @@ public class mainFrame extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tvchTable);
 
         tvFillBut.setText("(1) Заполнить");
+        tvFillBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tvFillButActionPerformed(evt);
+            }
+        });
 
         tvProcBut.setText("(2) Обработать");
         tvProcBut.setEnabled(false);
@@ -93,7 +94,12 @@ public class mainFrame extends javax.swing.JFrame {
 
         tvSettings.setText("Настройки");
 
-        tvchSettings.setText("Редактировать список настроек");
+        tvchSettings.setText("Редактировать список каналов");
+        tvchSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tvchSettingsActionPerformed(evt);
+            }
+        });
         tvSettings.add(tvchSettings);
 
         tvchReleaseOrder.setText("Порядок выпуска");
@@ -112,6 +118,11 @@ public class mainFrame extends javax.swing.JFrame {
         tvOther.setText("Справка");
 
         tvHelp.setText("Помощь");
+        tvHelp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tvHelpActionPerformed(evt);
+            }
+        });
         tvOther.add(tvHelp);
 
         tvAbout.setText("О программе");
@@ -158,7 +169,7 @@ public class mainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void exitButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButActionPerformed
-        JTVProg.logPrint("mainFrame", 2, "дана команда завершения!");
+        JTVProg.logPrint(this, 2, "дана команда завершения!");
         System.exit(0);
     }//GEN-LAST:event_exitButActionPerformed
 
@@ -166,6 +177,20 @@ public class mainFrame extends javax.swing.JFrame {
         tvchOrderFrame orderWindow = new tvchOrderFrame(this);
         orderWindow.setVisible(true);
     }//GEN-LAST:event_tvchReleaseOrderActionPerformed
+
+    private void tvchSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tvchSettingsActionPerformed
+        tvchSettingsFrame settingsWindow = new tvchSettingsFrame(this);
+        settingsWindow.setVisible(true);
+    }//GEN-LAST:event_tvchSettingsActionPerformed
+
+    private void tvHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tvHelpActionPerformed
+        helpFrame helpWindow = new helpFrame(this, true);
+        helpWindow.setVisible(true);
+    }//GEN-LAST:event_tvHelpActionPerformed
+
+    private void tvFillButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tvFillButActionPerformed
+        JTVProg.logPrint(this, 3, JTVProg.configer.Channels.toString());
+    }//GEN-LAST:event_tvFillButActionPerformed
 
     /**
      * @param args the command line arguments

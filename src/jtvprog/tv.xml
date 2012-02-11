@@ -19,12 +19,20 @@
         0
     </end-stamp>
     <tv-list>
-        <ch-entry oid="1" fid="1">
+        <ch-entry fid="1" rid="2">
             <name>
                 Test channel
             </name>
             <filename>
-                null
+                test1
+            </filename>
+        </ch-entry>
+        <ch-entry fid="2" rid="1">
+            <name>
+                Test channel2
+            </name>
+            <filename>
+                test2
             </filename>
         </ch-entry>
     </tv-list>
