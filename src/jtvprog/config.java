@@ -7,13 +7,10 @@
 package jtvprog;
 
 import java.io.*;
-import org.w3c.dom.*;
-import javax.xml.parsers.*;
-import org.xml.sax.SAXException;
 import javax.swing.table.*;
 
 /**
- * XML configuration handle class;
+ * Properties configuration handle class;
  * @author Stanislav Nepochatov
  */
 public class config {
@@ -21,7 +18,7 @@ public class config {
     /**
      * Name of configuration file
      */
-    private String ConfigName = "tvSet.xml";
+    private String ConfigName = "tvSet.properties";
     
     /**
      * File object of configuration
@@ -29,9 +26,9 @@ public class config {
     private File ConfigFile;
     
     /**
-     * XML doc object for configuration
+     * JTVProg properties config file
      */
-    private Document ConfigDoc;
+    private java.util.Properties ConfigProps = new java.util.Properties();
     
     /**
      * Channels set
@@ -39,49 +36,61 @@ public class config {
     public chSet Channels = new chSet();
     
     /**
-     * Default constructor. Finding files or create new one
+     * Channels processor for file processing
      */
-    config() throws IOException, ParserConfigurationException, SAXException {
-        int picks;
+    public chProcSet ChannelProcessor;
+    
+    /**
+     * Default constructor, find properties file or create it
+     * @throws IOException 
+     */
+    config() throws IOException {
         ConfigFile = new File(ConfigName);
-        if(!ConfigFile.exists()) {
+        if (!ConfigFile.exists()) {
             JTVProg.logPrint(this, 2, "создание файла конфигурации");
             ConfigFile.createNewFile();
-            FileOutputStream destStream = new FileOutputStream(ConfigFile);
-            InputStream sourceIStream = JTVProg.class.getResourceAsStream("tv.xml");
-            while ((picks = sourceIStream.read()) != -1) {
-                destStream.write(picks);
-            }
-            destStream.close();
-            sourceIStream.close();
+            java.util.Properties tempProps = new java.util.Properties();
+            tempProps.load(JTVProg.class.getResourceAsStream("tv.properties"));
+            tempProps.store(new FileWriter(ConfigFile), null);
         }
         else {
             JTVProg.logPrint(this, 3, "файл конфигурации обнаружен");
         }
-        
-        DocumentBuilderFactory configFact = DocumentBuilderFactory.newInstance();
-        configFact.setValidating(false);
-        DocumentBuilder configBld;
-        configBld = configFact.newDocumentBuilder();
-        ConfigDoc = configBld.parse(ConfigFile);
-        ConfigDoc.getDocumentElement().normalize();
-        this.createChOrder();
+        this.ConfigProps.load(new java.io.FileInputStream(ConfigFile));
+        this.resumeChannelSet();
     }
     
     /**
-     * Create set of channels
+     * Resume channel set from properties
      */
-    private void createChOrder() {
-        NodeList chNodes = ConfigDoc.getElementsByTagName("ch-entry");
-        JTVProg.logPrint(this, 3, ("количество каналов:" + chNodes.getLength()));
-        for (Integer chCounter = 0; chCounter < chNodes.getLength(); chCounter++) {
-            Element currentChannel = (Element) chNodes.item(chCounter);
-            Integer chFillOrder = Integer.parseInt(currentChannel.getAttribute("fid"));
-            Integer chReleaseOrder = Integer.parseInt(currentChannel.getAttribute("rid"));
-            String chName = currentChannel.getChildNodes().item(1).getTextContent().trim();
-            String chFile = currentChannel.getChildNodes().item(3).getTextContent().trim();
-            JTVProg.logPrint(this, 3, ("канал ('" + chName + "', " + chFillOrder + ", " + chReleaseOrder + ", " + chFile + ") обнаружен"));
-            Channels.addChannel(chName, chFillOrder, chReleaseOrder, chFile);
+    private void resumeChannelSet() {
+        Integer lastId = Integer.parseInt(ConfigProps.getProperty("tv_set.last_id"));
+        for (Integer id = 1; id <= lastId; id++) {
+            String tvPattern = "tv_set.channel_" + id;
+            try {
+            this.Channels.addChannel(
+                new String(ConfigProps.getProperty(tvPattern + ".name").getBytes("ISO-8859-1"), "UTF-8"),
+                Integer.parseInt(ConfigProps.getProperty(tvPattern + ".fill_order")), 
+                Integer.parseInt(ConfigProps.getProperty(tvPattern + ".release_order")), 
+                new String(ConfigProps.getProperty(tvPattern + ".file_name").getBytes("ISO-8859-1"), "UTF-8")
+            );
+            } catch (UnsupportedEncodingException ex) {
+                JTVProg.logPrint(this, 1, "ошибка декодирования файла конфигурации");
+            }
+        }
+    }
+    
+    /**
+     * Store set to properties file and save it
+     */
+    public void storeChannelSet() {
+        Channels.storeToProperties(ConfigProps);
+        try {
+            ConfigProps.store(new FileWriter(ConfigFile), null);
+        } catch (IOException ex) {
+            JTVProg.logPrint(this, 0, "ошибка записи файла конфигурации");
+        } finally {
+            JTVProg.logPrint(this, 3, "файл конфигурации записан");
         }
     }
     

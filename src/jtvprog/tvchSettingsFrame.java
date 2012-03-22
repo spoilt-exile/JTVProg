@@ -288,7 +288,7 @@ public class tvchSettingsFrame extends javax.swing.JDialog {
     }//GEN-LAST:event_editButActionPerformed
 
     private void chNameFieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_chNameFieldCaretUpdate
-        this.chFileField.setText(this.chNameField.getText().toLowerCase().replaceAll(" ", "_") + ".ch");
+        this.chFileField.setText(this.chNameField.getText().toLowerCase().replaceAll(" ", "_") + ".txt");
     }//GEN-LAST:event_chNameFieldCaretUpdate
 
     private void delButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delButActionPerformed

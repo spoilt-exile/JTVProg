@@ -85,7 +85,8 @@ public class logerFrame extends javax.swing.JFrame {
                 break;
         }
         if (type <= this.logLevel.getSelectedIndex()) {
-            logListModel.addElement("<html><font color=#836502>["+ component + "]</font>: <font color=" + typeColor + ">" + typeStr + "</font>" + ">> '" + message + "';</html>");
+            this.logListModel.addElement("<html><font color=#836502>["+ component + "]</font>: <font color=" + typeColor + ">" + typeStr + "</font>" + ">> '" + message + "';</html>");
+            this.logList.ensureIndexIsVisible(this.logListModel.getSize() - 1);
         }
     }
 
@@ -186,6 +187,7 @@ public class logerFrame extends javax.swing.JFrame {
             if (type <= this.logLevel.getSelectedIndex()) {
                 this.logListModel.addElement("<html><font color=#836502>["+ component + "]</font>: <font color=" + typeColor + ">" + typeStr + "</font>" + ">> '" + message + "';</html>");
             }
+            this.logList.ensureIndexIsVisible(this.logListModel.getSize() - 1);
         }
     }//GEN-LAST:event_logLevelItemStateChanged
 

@@ -36,7 +36,7 @@ public class chSet {
     /**
      * Class for channel entry
      */
-    private class chEntry implements Cloneable {
+    protected class chEntry implements Cloneable {
         
         /**
          * Default constructor
@@ -71,6 +71,10 @@ public class chSet {
          */
         public String chFilename;
         
+        /**
+         * Get copy of chEntry
+         * @return copy of object
+         */
         public chEntry getCopy() {
             chEntry returned = null;
             try {
@@ -325,5 +329,22 @@ public class chSet {
             res = res.concat("'" + channel.chName + "':F=" + channel.chFillOrder + ";R=" + channel.chReleaseOrder + ":File=" + channel.chFilename + "\n");
         }
         return res;
+    }
+    
+    /**
+     * Store all channel in specified properties
+     * @param inputProperties 
+     */
+    public final void storeToProperties(java.util.Properties inputProperties) {
+        inputProperties.setProperty("tv_set.last_id", String.valueOf(this.getSetSize()));
+        for (Integer id = 1; id <= this.getSetSize(); id++) {
+            String tvPattern = "tv_set.channel_" + id;
+            String chName = this.getChannelByFOrder(id);
+            chEntry Channel = this.lastFound;
+            inputProperties.setProperty(tvPattern + ".name", chName);
+            inputProperties.setProperty(tvPattern + ".fill_order", String.valueOf(Channel.chFillOrder));
+            inputProperties.setProperty(tvPattern + ".release_order", String.valueOf(Channel.chReleaseOrder));
+            inputProperties.setProperty(tvPattern + ".file_name", Channel.chFilename);
+        }
     }
 }

@@ -45,6 +45,11 @@ public class mainFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Обработчик телепрограммы");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         tvchTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -81,9 +86,19 @@ public class mainFrame extends javax.swing.JFrame {
 
         tvProcBut.setText("(2) Обработать");
         tvProcBut.setEnabled(false);
+        tvProcBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tvProcButActionPerformed(evt);
+            }
+        });
 
         tvReleaseBut.setText("(3) Выпустить");
         tvReleaseBut.setEnabled(false);
+        tvReleaseBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tvReleaseButActionPerformed(evt);
+            }
+        });
 
         exitBut.setText("Выход");
         exitBut.addActionListener(new java.awt.event.ActionListener() {
@@ -170,6 +185,7 @@ public class mainFrame extends javax.swing.JFrame {
 
     private void exitButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButActionPerformed
         JTVProg.logPrint(this, 2, "дана команда завершения!");
+        JTVProg.configer.storeChannelSet();
         System.exit(0);
     }//GEN-LAST:event_exitButActionPerformed
 
@@ -189,8 +205,24 @@ public class mainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_tvHelpActionPerformed
 
     private void tvFillButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tvFillButActionPerformed
-        JTVProg.logPrint(this, 3, JTVProg.configer.Channels.toString());
+        JTVProg.inputWindow = new inputFrame();
+        JTVProg.inputWindow.setVisible(true);
     }//GEN-LAST:event_tvFillButActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        JTVProg.configer.storeChannelSet();
+    }//GEN-LAST:event_formWindowClosing
+
+    private void tvProcButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tvProcButActionPerformed
+        JTVProg.configer.ChannelProcessor.processDays();
+        this.tvProcBut.setEnabled(false);
+        this.tvReleaseBut.setEnabled(true);
+    }//GEN-LAST:event_tvProcButActionPerformed
+
+    private void tvReleaseButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tvReleaseButActionPerformed
+        outputFrame outputWindow = new outputFrame(this);
+        outputWindow.setVisible(true);
+    }//GEN-LAST:event_tvReleaseButActionPerformed
 
     /**
      * @param args the command line arguments
@@ -233,11 +265,11 @@ public class mainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem tvAbout;
     private javax.swing.JMenuBar tvBar;
     private javax.swing.JMenuItem tvDeleteFiles;
-    private javax.swing.JButton tvFillBut;
+    public javax.swing.JButton tvFillBut;
     private javax.swing.JMenuItem tvHelp;
     private javax.swing.JMenu tvOther;
-    private javax.swing.JButton tvProcBut;
-    private javax.swing.JButton tvReleaseBut;
+    public javax.swing.JButton tvProcBut;
+    public javax.swing.JButton tvReleaseBut;
     private javax.swing.JMenu tvSettings;
     private javax.swing.JMenuItem tvchReleaseOrder;
     private javax.swing.JMenuItem tvchSettings;

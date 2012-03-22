@@ -26,6 +26,14 @@ public class JTVProg {
      */
     public static mainFrame mainWindow;
     
+    /**
+     * Input window object
+     */
+    public static inputFrame inputWindow;
+    
+    /**
+     * Log window object
+     */
     private static logerFrame logWindow;
     
     /**
@@ -35,14 +43,12 @@ public class JTVProg {
     public static void main(String[] args) {
         logWindow = new logerFrame();
         logWindow.setVisible(true);
-        logWindow.setLocation(1360, 0);
+        logWindow.setLocation(700, 0);
         logPrint("JTVProg", 3, "старт программы ");
         try {
             configer = new config();
         } catch (IOException ex) {
-            logPrint("JTVProg", 0, "ошибка при создании файла конфигурации");
-        } catch (Exception ex) {
-            logPrint("JTVProg", 0, "общая ошибка чтения конфигурации");
+            logPrint("JTVProg", 0, "ошибка ввода/вывода при чтении файла конфигурации");
             ex.printStackTrace();
         }
         mainWindow = new mainFrame();
