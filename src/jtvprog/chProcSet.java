@@ -464,6 +464,10 @@ public class chProcSet extends chSet{
      * @param content content current content of channel
      */
     public void performInput(String content) {
+        String gmtLabel = "GMT + 2";
+        if (content.contains(gmtLabel)) {
+            content = content.substring(content.indexOf(gmtLabel) + gmtLabel.length()).trim();
+        }
         this.currentUnit.chStored = content;
         this.currentUnit.writeChannel();
         for (Integer dayIndex = 0; dayIndex < 7; dayIndex++) {
