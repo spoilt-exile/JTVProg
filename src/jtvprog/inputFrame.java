@@ -36,9 +36,13 @@ public class inputFrame extends javax.swing.JFrame {
         nextBut = new javax.swing.JButton();
         prevBut = new javax.swing.JButton();
         infoLabel = new javax.swing.JLabel();
+        pasteBut = new javax.swing.JButton();
+        flushBut = new javax.swing.JButton();
+        finishBut = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Заполнение каналов");
+        setIconImage(JTVProg.configer.jtvprogIcon);
 
         jScrollPane1.setViewportView(inputPane);
 
@@ -63,20 +67,48 @@ public class inputFrame extends javax.swing.JFrame {
         infoLabel.setText("Информация");
         infoLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
+        pasteBut.setText("Вставить");
+        pasteBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pasteButActionPerformed(evt);
+            }
+        });
+
+        flushBut.setText("Очистить");
+        flushBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                flushButActionPerformed(evt);
+            }
+        });
+
+        finishBut.setText("Завершить ввод");
+        finishBut.setEnabled(false);
+        finishBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                finishButActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 650, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 650, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(prevBut)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(infoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nextBut, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(nextBut, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(pasteBut)
+                        .addGap(18, 18, 18)
+                        .addComponent(flushBut)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(finishBut)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -88,7 +120,12 @@ public class inputFrame extends javax.swing.JFrame {
                     .addComponent(nextBut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(infoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(pasteBut)
+                    .addComponent(flushBut)
+                    .addComponent(finishBut))
                 .addContainerGap())
         );
 
@@ -96,13 +133,15 @@ public class inputFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void nextButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButActionPerformed
-        if (1 <= JTVProg.configer.ChannelProcessor.currentIndex && JTVProg.configer.ChannelProcessor.currentIndex <= JTVProg.configer.ChannelProcessor.getSetSize() - 1) {
-            if (JTVProg.configer.ChannelProcessor.checkInput(this.inputPane.getText()) == false) {
-                JTVProg.warningMessage("Введен не тот канал, или текст не полон!\nНеобходимый канал: " + JTVProg.configer.ChannelProcessor.currentChName);
+        if (1 <= JTVProg.configer.ChannelProcessor.currentIndex && JTVProg.configer.ChannelProcessor.currentIndex <= JTVProg.configer.ChannelProcessor.getSetSize()) {
+            String errorMessage;
+            if ((errorMessage = JTVProg.configer.ChannelProcessor.checkInputDP(this.inputPane.getText())) != null) {
+                JTVProg.warningMessage(errorMessage);
             }
             else {
                 if (!this.inputPane.getText().equals(JTVProg.configer.ChannelProcessor.getCurrentContent())) {
                     JTVProg.configer.ChannelProcessor.performInput(this.inputPane.getText());
+                    //JTVProg.configer.markWrited(JTVProg.configer.ChannelProcessor.currentIndex - 1);
                 }
                 JTVProg.configer.ChannelProcessor.inputNext();
                 this.prevBut.setEnabled(true);
@@ -110,18 +149,23 @@ public class inputFrame extends javax.swing.JFrame {
                 this.inputPane.setText(JTVProg.configer.ChannelProcessor.getCurrentContent());
             }
             if (JTVProg.configer.ChannelProcessor.currentIndex == JTVProg.configer.ChannelProcessor.getSetSize()) {
-                this.nextBut.setText("Завершить X");
+                this.finishBut.setEnabled(true);
+                this.nextBut.setEnabled(false);
             }
-        } else if (JTVProg.configer.ChannelProcessor.currentIndex == JTVProg.configer.ChannelProcessor.getSetSize()) {
+        } /**else if (JTVProg.configer.ChannelProcessor.currentIndex == JTVProg.configer.ChannelProcessor.getSetSize()) {
             if (!this.inputPane.getText().equals(JTVProg.configer.ChannelProcessor.getCurrentContent())) {
                 JTVProg.configer.ChannelProcessor.performInput(this.inputPane.getText());
                 JTVProg.configer.ChannelProcessor.endInput();
                 this.dispose();
             }
-        }
+        }**/
     }//GEN-LAST:event_nextButActionPerformed
 
     private void prevButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevButActionPerformed
+        if (!inputPane.getText().isEmpty()) {
+            JTVProg.configer.ChannelProcessor.performInput(this.inputPane.getText());
+            JTVProg.configer.markWrited(JTVProg.configer.ChannelProcessor.currentIndex - 1);
+        }
         JTVProg.configer.ChannelProcessor.inputPrev();
         this.infoLabel.setText(JTVProg.configer.ChannelProcessor.currentChName + "[" + JTVProg.configer.ChannelProcessor.currentIndex + "/" + JTVProg.configer.ChannelProcessor.getSetSize() + "]");
         this.inputPane.setText(JTVProg.configer.ChannelProcessor.getCurrentContent());
@@ -132,6 +176,26 @@ public class inputFrame extends javax.swing.JFrame {
             this.nextBut.setText("Следующий >>");
         }
     }//GEN-LAST:event_prevButActionPerformed
+
+    private void pasteButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteButActionPerformed
+        this.inputPane.setText(JTVProg.cilper.getClipboardContents());
+    }//GEN-LAST:event_pasteButActionPerformed
+
+    private void flushButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_flushButActionPerformed
+        this.inputPane.setText("");
+    }//GEN-LAST:event_flushButActionPerformed
+
+    private void finishButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishButActionPerformed
+        String errorMessage;
+        if ((errorMessage = JTVProg.configer.ChannelProcessor.checkInput(this.inputPane.getText())) != null) {
+            JTVProg.warningMessage(errorMessage);
+        } else {
+            JTVProg.configer.ChannelProcessor.performInput(this.inputPane.getText());
+            JTVProg.configer.markWrited(JTVProg.configer.ChannelProcessor.currentIndex - 1);
+            JTVProg.configer.ChannelProcessor.endInput();
+            this.dispose();
+        }
+    }//GEN-LAST:event_finishButActionPerformed
 
     /**
      * @param args the command line arguments
@@ -169,10 +233,13 @@ public class inputFrame extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton finishBut;
+    private javax.swing.JButton flushBut;
     private javax.swing.JLabel infoLabel;
     private javax.swing.JTextPane inputPane;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton nextBut;
+    private javax.swing.JButton pasteBut;
     private javax.swing.JButton prevBut;
     // End of variables declaration//GEN-END:variables
 }

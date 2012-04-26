@@ -6,7 +6,7 @@
 
 package jtvprog;
 
-import javax.swing.*;
+import javax.swing.DefaultListModel;
 
 /**
  * Release window class
@@ -24,7 +24,6 @@ public class outputFrame extends javax.swing.JDialog {
         super(parent, true);
         initComponents();
         JTVProg.configer.ChannelProcessor.beginOutput();
-        System.out.println(JTVProg.configer.ChannelProcessor.operOutHeaders.size());
         buildList();
     }
     
@@ -66,7 +65,6 @@ public class outputFrame extends javax.swing.JDialog {
         setTitle("Выпуск телепрограммы");
 
         jSplitPane1.setDividerLocation(200);
-        jSplitPane1.setDividerSize(5);
 
         releaseText.setColumns(20);
         releaseText.setEditable(false);
@@ -74,12 +72,21 @@ public class outputFrame extends javax.swing.JDialog {
         jScrollPane1.setViewportView(releaseText);
 
         releaseLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        releaseLabel.setText("jLabel1");
 
         outPrevBut.setText("<");
         outPrevBut.setEnabled(false);
+        outPrevBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                outPrevButActionPerformed(evt);
+            }
+        });
 
         outNextBut.setText(">");
+        outNextBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                outNextButActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -92,7 +99,7 @@ public class outputFrame extends javax.swing.JDialog {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(outPrevBut)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(releaseLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
+                        .addComponent(releaseLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(outNextBut)))
                 .addContainerGap())
@@ -135,7 +142,7 @@ public class outputFrame extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
-                    .addComponent(modeBox, javax.swing.GroupLayout.Alignment.LEADING, 0, 175, Short.MAX_VALUE))
+                    .addComponent(modeBox, javax.swing.GroupLayout.Alignment.LEADING, 0, 179, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -154,11 +161,11 @@ public class outputFrame extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 679, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
+            .addComponent(jSplitPane1)
         );
 
         pack();
@@ -171,11 +178,32 @@ public class outputFrame extends javax.swing.JDialog {
     }//GEN-LAST:event_modeBoxItemStateChanged
 
     private void releaseListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_releaseListValueChanged
-        if (this.releaseModel.isEmpty() == false) {
+        if (this.releaseList.getSelectedIndex() >= 0) {
+            if (this.releaseList.getSelectedIndex() == 0) {
+                this.outPrevBut.setEnabled(false);
+            } else if (this.releaseList.getSelectedIndex() == (this.releaseModel.getSize() - 1)) {
+                this.outNextBut.setEnabled(false);
+            } else {
+                this.outPrevBut.setEnabled(true);
+                this.outNextBut.setEnabled(true);
+            }
+            JTVProg.configer.ChannelProcessor.currentIndex = this.releaseList.getSelectedIndex();
+            JTVProg.configer.ChannelProcessor.currentChName = JTVProg.configer.ChannelProcessor.operOutStack.get(this.releaseList.getSelectedIndex());
             this.releaseLabel.setText(JTVProg.configer.ChannelProcessor.operOutHeaders.get(this.releaseList.getSelectedIndex()));
             this.releaseText.setText(JTVProg.configer.ChannelProcessor.operOutStack.get(this.releaseList.getSelectedIndex()));
+            JTVProg.cilper.setClipboardContents(JTVProg.configer.ChannelProcessor.operOutStack.get(this.releaseList.getSelectedIndex()));
         }
     }//GEN-LAST:event_releaseListValueChanged
+
+    private void outNextButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outNextButActionPerformed
+        JTVProg.configer.ChannelProcessor.outputNext();
+        this.releaseList.setSelectedIndex(JTVProg.configer.ChannelProcessor.currentIndex);
+    }//GEN-LAST:event_outNextButActionPerformed
+
+    private void outPrevButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outPrevButActionPerformed
+        JTVProg.configer.ChannelProcessor.outputPrev();
+        this.releaseList.setSelectedIndex(JTVProg.configer.ChannelProcessor.currentIndex);
+    }//GEN-LAST:event_outPrevButActionPerformed
 
     /**
      * @param args the command line arguments

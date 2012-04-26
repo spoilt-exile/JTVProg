@@ -19,6 +19,15 @@ public class mainFrame extends javax.swing.JFrame {
         JTVProg.logPrint(this, 3, "показ главного окна");
     }
 
+    /**
+     * Tail method for processDaysThread
+     */
+    public void procDaysTail() {
+        this.tvReleaseBut.setEnabled(true);
+        JTVProg.procWindow.dispose();
+        JTVProg.procWindow = null;
+    }
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -40,11 +49,13 @@ public class mainFrame extends javax.swing.JFrame {
         tvchReleaseOrder = new javax.swing.JMenuItem();
         tvDeleteFiles = new javax.swing.JMenuItem();
         tvOther = new javax.swing.JMenu();
+        showLogBox = new javax.swing.JCheckBoxMenuItem();
         tvHelp = new javax.swing.JMenuItem();
         tvAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Обработчик телепрограммы");
+        setIconImage(JTVProg.configer.jtvprogIcon);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -132,6 +143,14 @@ public class mainFrame extends javax.swing.JFrame {
 
         tvOther.setText("Справка");
 
+        showLogBox.setText("Показывать журнал");
+        showLogBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                showLogBoxItemStateChanged(evt);
+            }
+        });
+        tvOther.add(showLogBox);
+
         tvHelp.setText("Помощь");
         tvHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -141,6 +160,11 @@ public class mainFrame extends javax.swing.JFrame {
         tvOther.add(tvHelp);
 
         tvAbout.setText("О программе");
+        tvAbout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tvAboutActionPerformed(evt);
+            }
+        });
         tvOther.add(tvAbout);
 
         tvBar.add(tvOther);
@@ -214,15 +238,25 @@ public class mainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void tvProcButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tvProcButActionPerformed
-        JTVProg.configer.ChannelProcessor.processDays();
         this.tvProcBut.setEnabled(false);
-        this.tvReleaseBut.setEnabled(true);
+        //JTVProg.configer.ChannelProcessor.processDays();
+        JTVProg.procWindow = new procFrame(this, true);
+        JTVProg.procWindow.setVisible(true);
     }//GEN-LAST:event_tvProcButActionPerformed
 
     private void tvReleaseButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tvReleaseButActionPerformed
         outputFrame outputWindow = new outputFrame(this);
         outputWindow.setVisible(true);
     }//GEN-LAST:event_tvReleaseButActionPerformed
+
+    private void tvAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tvAboutActionPerformed
+        aboutFrame aboutWindow = new aboutFrame(this, true);
+        aboutWindow.setVisible(true);
+    }//GEN-LAST:event_tvAboutActionPerformed
+
+    private void showLogBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_showLogBoxItemStateChanged
+        JTVProg.setLogWindowVisibilty(this.showLogBox.isSelected());
+    }//GEN-LAST:event_showLogBoxItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -262,6 +296,7 @@ public class mainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton exitBut;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JCheckBoxMenuItem showLogBox;
     private javax.swing.JMenuItem tvAbout;
     private javax.swing.JMenuBar tvBar;
     private javax.swing.JMenuItem tvDeleteFiles;

@@ -6,6 +6,8 @@
 
 package jtvprog;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.*;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -37,12 +39,22 @@ public class JTVProg {
     private static logerFrame logWindow;
     
     /**
+     * Processing window object
+     */
+    public static procFrame procWindow;
+    
+    /**
+     * Clipboard handler object;
+     */
+    public static clipboardProvider cilper = new clipboardProvider();
+    
+    /**
      * Main method
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         logWindow = new logerFrame();
-        logWindow.setVisible(true);
+        logWindow.setVisible(false);
         logWindow.setLocation(700, 0);
         logPrint("JTVProg", 3, "старт программы ");
         try {
@@ -95,11 +107,75 @@ public class JTVProg {
     }
     
     /**
+     * Set log window visibility with given flag
+     * @param flag given boolean flag for log window visibility
+     */
+    public static void setLogWindowVisibilty(Boolean flag) {
+        logWindow.setVisible(flag);
+    }
+    
+    /**
      * Show graphical warning message
      * @param Message text of warning message
      */
     public static void warningMessage (String Message) {
         final JPanel panel = new JPanel();
         JOptionPane.showMessageDialog(panel, Message, "Внимание!", JOptionPane.WARNING_MESSAGE);
+    }
+    
+    /**
+    * Clipboard provider for system integration
+    * @author Stanislav Nepochatov
+    * Code was taken from javapracticies.com
+    */
+    public static class clipboardProvider implements ClipboardOwner {
+
+        /**
+        * Empty implementation of the ClipboardOwner interface.
+        */
+        @Override
+        public void lostOwnership(Clipboard aClipboard, Transferable aContents) {
+            //do nothing
+        }
+
+        /**
+        * Place a String on the clipboard, and make this class the
+        * owner of the Clipboard's contents.
+        * @param aString future clipboard content
+        */
+        public void setClipboardContents(String aString){
+            StringSelection stringSelection = new StringSelection(aString);
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, this);
+        }
+
+        /**
+        * Get the String residing on the clipboard.
+        *
+        * @return any text found on the Clipboard; if none found, return an
+        * empty String.
+        */
+        public String getClipboardContents() {
+            String result = "";
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            //odd: the Object param of getContents is not currently used
+            Transferable contents = clipboard.getContents(null);
+            boolean hasTransferableText = (contents != null) && contents.isDataFlavorSupported(DataFlavor.stringFlavor);
+            if ( hasTransferableText ) {
+                try {
+                    result = (String) contents.getTransferData(DataFlavor.stringFlavor);
+                }
+                catch (UnsupportedFlavorException ex){
+                //highly unlikely since we are using a standard DataFlavor
+                    System.out.println(ex);
+                    ex.printStackTrace();
+                }
+                catch (IOException ex) {
+                    System.out.println(ex);
+                    ex.printStackTrace();
+                }
+            }
+            return result;
+        }
     }
 }

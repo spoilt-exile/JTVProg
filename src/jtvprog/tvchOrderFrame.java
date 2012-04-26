@@ -30,7 +30,6 @@ public class tvchOrderFrame extends javax.swing.JDialog {
         initComponents();
         JTVProg.logPrint("tvchOrderFrame", 3, "показ окна");
         this.fillChannelList();
-        System.out.println(localSet.equals(JTVProg.configer.Channels));
     }
     
     /**

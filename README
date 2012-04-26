@@ -7,6 +7,27 @@ application is distributing under terms of GNU GPLv2 license (see LICENSE file).
 
 CHANGELOG
 ==========================================================================================
+JTVProg v0.2 (26.04.2012)
+
+Changes:
+ + new method chProcSet.checkInputDP() with deeper channel processing added;
+ + general information added;
+ + clipboard maintaining code added;
+ + added logos;
+ + added code for main table marking;
+ + some buttons added (Paste and Reset) to inputFrame;
+ * day processing now executed in separate thread;
+ * from now channel splitting will be executed in chProcSet.checkInputDP() method;
+ * log window from now can be hided;
+ * processing error message conclusion added;
+ * from now separate button finish input;
+ - chProcSet.checkInput() method was marked as deprecated;
+
+Fixes:
+ X selecting wrong element in tvSettingsFrame;
+ X getting OutOfBoundsException in ouput window while switching release mode;
+ X last input hasn't been checked;
+==========================================================================================
 JTVProg v0.1 (22.03.2012)
 
 Changes:

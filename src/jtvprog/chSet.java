@@ -94,7 +94,11 @@ public class chSet {
      */
     public void addChannel(String chName, Integer chFOrder, Integer chROrder, String chFileName) {
         chEntry channel = new chEntry(chName, chFOrder, chROrder, chFileName);
-        chList.add(channel);
+        if (chList.contains(channel) == false) {
+            chList.add(channel);
+        } else {
+            JTVProg.logPrint(this, 2, "ошибка добавления: канал уже присутствует в списке [" + chName + "]");
+        }
     }
     
     /**
@@ -104,7 +108,7 @@ public class chSet {
      */
     public Boolean isPresnt(String chName) {
         Boolean res = false;
-        for (Integer chCounter = 0; chCounter == (chList.size() - 1); chCounter++) {
+        for (Integer chCounter = 0; chCounter < chList.size(); chCounter++) {
             chEntry channel = chList.get(chCounter);
             if (channel.chName.equals(chName)) {
                 lastFound = channel;
@@ -123,7 +127,7 @@ public class chSet {
      * @param chName name of the channel which will be deleted
      */
     public void removeChannel(String chName) {
-        if (this.isPresnt(chName) == false) {
+        if (this.isPresnt(chName) == true) {
             JTVProg.logPrint(this, 2, "удаление канала [" + chName + "]");
             Integer remFOrder = this.lastFound.chFillOrder;
             Integer remROrder = this.lastFound.chReleaseOrder;
@@ -340,11 +344,17 @@ public class chSet {
         for (Integer id = 1; id <= this.getSetSize(); id++) {
             String tvPattern = "tv_set.channel_" + id;
             String chName = this.getChannelByFOrder(id);
-            chEntry Channel = this.lastFound;
-            inputProperties.setProperty(tvPattern + ".name", chName);
+            chEntry Channel =  this.lastFound;
+            try {
+                //inputProperties.setProperty(tvPattern + ".name", new String(chName.getBytes(System.getProperty("file.encoding")), "UTF-8"));
+                //inputProperties.setProperty(tvPattern + ".file_name", new String(Channel.chFilename.getBytes(System.getProperty("file.encoding")), "UTF-8"));
+                inputProperties.setProperty(tvPattern + ".name", new String(chName.getBytes(), JTVProg.configer.sysEncoding));
+                inputProperties.setProperty(tvPattern + ".file_name", new String(Channel.chFilename.getBytes(), JTVProg.configer.sysEncoding));
+            } catch (java.io.UnsupportedEncodingException ex) {
+                JTVProg.logPrint(this, 1, "ошибка кодирования файла конфигурации");
+            }
             inputProperties.setProperty(tvPattern + ".fill_order", String.valueOf(Channel.chFillOrder));
             inputProperties.setProperty(tvPattern + ".release_order", String.valueOf(Channel.chReleaseOrder));
-            inputProperties.setProperty(tvPattern + ".file_name", Channel.chFilename);
         }
     }
 }

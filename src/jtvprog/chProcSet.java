@@ -93,6 +93,21 @@ public class chProcSet extends chSet{
      * Array of string constants for days of week
      */
     private String[] daysPatterns = new String[] {"Понедельник,", "Вторник,", "Среда,", "Четверг,", "Пятница,", "Суббота,", "Воскресенье,"};
+    private String[] daysPatterns_NOMINATIVE = new String[] {"понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"};
+    private String[] daysPatterns_GENITIVE = new String[] {"понедельника", "вторника", "среды", "четверга", "пятницы", "субботы", "воскресенья"};
+    private String[] daysPatterns_INSTRUMENTAL = new String[] {"понедельником", "вторником", "средой", "четвергом", "пятницой", "субботой", "воскресеньем"};
+    
+    /**
+     * Temporary array for checkInputDP and perfromInput conversation;
+     * @see #checkInputDP(java.lang.String)
+     * @see #performInput(java.lang.String) 
+     */
+    private String[] dayTempStack = new String[7];
+    
+    /**
+     * Array of string blocks for day release
+     */
+    private String[][] dayMatrix = new String[7][JTVProg.configer.Channels.getSetSize()];
     
     /**
      * Output stack for program relese<br>
@@ -198,6 +213,8 @@ public class chProcSet extends chSet{
                 JTVProg.logPrint(this, 3, "файл канала [" + this.chName + "] успешно сохранен");
             } catch (IOException ex) {
                 JTVProg.logPrint(this, 0, "ошибка записи файла канала [" + this.chName + "]");
+            } finally {
+                JTVProg.configer.markWrited(this.chFillOrder - 1);
             }
         }
         
@@ -334,16 +351,93 @@ public class chProcSet extends chSet{
     }
     
     /**
+     * Check channel input (deeper version)
+     * This method checks given string with multifactor conditions<br>
+     * to pass this checking channel content must satisfy such conditions as:<br>
+     * 1) First line must contain channel's name;<br>
+     * 2) String must contain all days in the week;<<br>
+     * 3) All days should have correct date against other channels;<br>
+     * <br>
+     * This method also split current channel text by days and prepeare<br>
+     * <code>daysTempStack</code> variable to accept by <code>performInput()</code><br>
+     * method.
+     * @param content string with channel content
+     * @return string with error or null
+     * @since JTVProg v0.2
+     */
+    public String checkInputDP(String content) {
+        String returned = null;
+        
+        String gmtLabel = "GMT + 2";
+        if (content.contains(gmtLabel)) {
+            content = content.substring(content.indexOf(gmtLabel) + gmtLabel.length()).trim();
+        }
+        
+        //First condition
+        if (this.pickHead(content).contains(this.currentChName)) {
+            String[] blocks = content.split(lineSeparator + lineSeparator);
+            Integer acceptedIndex = -1;
+            for (Integer currBlockIndex = 0; currBlockIndex < blocks.length; currBlockIndex++) {
+                String currentBlock = blocks[currBlockIndex];
+                String blockHeader = pickHead(currentBlock);
+                Integer currentDayIndex;
+                if ((currentDayIndex = recognizeDay(blockHeader)) != -1) {
+                    if (daysHeaders[currentDayIndex] == null) {
+                        //JTVProg.logPrint(this, 3, "добавление дня [" + blockHeader + "]");
+                        daysHeaders[currentDayIndex] = blockHeader;
+                        //this.dayTempStack[currentDayIndex] = currentBlock.trim();
+                    } else {
+                        
+                        //Third condition
+                        if (!blockHeader.equals(daysHeaders[currentDayIndex])) {
+                            returned = this.currentUnit.chName + ": несовпадение дат (" + blockHeader + "->" + daysHeaders[currentDayIndex] + ");\n";
+                            break;
+                            //JTVProg.logPrint(this, 1, "несовпадение дат: [" + blockHeader + "->" + daysHeaders[currentDayIndex] + "]");
+                        }
+                    }
+                    
+                    //Additional condition: sequence checking
+                    if (acceptedIndex != currentDayIndex - 1) {
+                        returned = "Нарушение очередности!\nЗа " + this.daysPatterns_INSTRUMENTAL[acceptedIndex] + " следует " + this.daysPatterns_NOMINATIVE[currentDayIndex] + "?";
+                        break;
+                    } else {
+                        this.dayTempStack[currentDayIndex] = currentBlock.replaceAll(blockHeader, this.currentChName).trim();
+                        acceptedIndex = currentDayIndex;
+                    }
+                } else {
+                    //JTVProg.logPrint(this, 2, "блок [" + currBlockIndex + "] не является днем");
+                }
+            }
+            
+            //Second condition
+            if (acceptedIndex != 6) {
+                if (returned == null) {
+                    returned = "Не хватает " + this.daysPatterns_GENITIVE[acceptedIndex + 1];
+                }
+            }
+        } else {
+            returned = "Введен не тот канал!\nНеобходимый канал: " + this.currentChName;
+        }
+        
+        if (returned == null) {
+            JTVProg.configer.markProcessed(currentIndex - 1);
+        }
+        return returned;
+    }
+    
+    /**
      * Check channel input 
      * @param content current content of channel
      * @return true if given content correspond to current channel / false of not
+     * @deprecated This method didn't provide full channel text parsing
      */
-    public Boolean checkInput(String content) {
-        Boolean returned = false;
+    public String checkInput(String content) {
+        String returned;
         if (content.contains(this.currentChName)) {
-            returned = true;
+            returned = preProcess(content);
+        } else {
+            returned = "Введен не тот канал!\nНеобходимый канал: " + this.currentChName;
         }
-        returned = returned & this.preProcess(content);
         return returned;
     }
     
@@ -351,13 +445,14 @@ public class chProcSet extends chSet{
      * General check of channel format
      * @param content current content of channel
      * @return true if channel content contains all days of week
+     * @deprecated This method is too simple to parse channel
      */
-    private Boolean preProcess(String content) {
-        Boolean returned = true;
+    private String preProcess(String content) {
+        String returned = null;
         for (Integer dayIndex = 0; dayIndex < this.daysPatterns.length; dayIndex++) {
             if (content.contains(this.daysPatterns[dayIndex]) == false) {
                 JTVProg.logPrint(this, 1, "[" + this.currentChName + "]: текст не полон");
-                returned = false;
+                returned = "Текст канала [" + this.currentChName + "] не полон!\nПроверьте целостность текста!";
                 break;
             }
         }
@@ -369,24 +464,44 @@ public class chProcSet extends chSet{
      * @param content content current content of channel
      */
     public void performInput(String content) {
-        String gmtLabel = "GMT + 2";
-        if (content.contains(gmtLabel)) {
-            content = content.substring(content.indexOf(gmtLabel) + gmtLabel.length()).trim();
-        }
         this.currentUnit.chStored = content;
         this.currentUnit.writeChannel();
+        for (Integer dayIndex = 0; dayIndex < 7; dayIndex++) {
+            this.dayMatrix[dayIndex][this.currentUnit.chReleaseOrder - 1] = this.dayTempStack[dayIndex];
+        }
+    }
+    
+    /**
+     * Thread launching object for processDays() method
+     * @see #processDays() 
+     */
+    public class processDaysThread implements Runnable {
+        
+        @Override
+        public void run() {
+            processDays();
+            JTVProg.mainWindow.procDaysTail();
+        }
+        
     }
     
     /**
      * Process channel for day release (init method)
      */
     public void processDays() {
+        String procDirtyMessage = "\n\nОшибки обработки:\n";
+        Boolean procIsDirty = false;
         JTVProg.logPrint(this, 3, "начата обработка каналов");
-        String[][] dayMatrix = new String[7][this.getSetSize()];
-        java.util.ListIterator<chProcUnit> chUnits = this.chProcList.listIterator();
+        //String[][] dayMatrix = new String[7][this.getSetSize()];
+        /**java.util.ListIterator<chProcUnit> chUnits = this.chProcList.listIterator();
+        Integer chProgCounter = 1;
         while (chUnits.hasNext()) {
+            Boolean chIsDirty = false;
             chProcUnit currentProc = chUnits.next();
             JTVProg.logPrint(this, 3, "обработка канала [" + currentProc.chName + "]");
+            JTVProg.procWindow.procLabel.setText(currentProc.chName);
+            JTVProg.procWindow.procProgres.setValue((chProgCounter / chProcList.size()) * 100 / 2);
+            chProgCounter++;
             String[] blocks = currentProc.chStored.split(lineSeparator + lineSeparator);
             for (Integer currBlockIndex = 0; currBlockIndex < blocks.length; currBlockIndex++) {
                 String currentBlock = blocks[currBlockIndex];
@@ -396,21 +511,36 @@ public class chProcSet extends chSet{
                     JTVProg.logPrint(this, 3, "добавление дня [" + blockHeader + "]");
                     if (daysHeaders[currentDayIndex] == null) {
                         daysHeaders[currentDayIndex] = blockHeader;
+                    } else {
+                        if (!blockHeader.equals(daysHeaders[currentDayIndex])) {
+                            JTVProg.logPrint(this, 1, "несовпадение дат: [" + blockHeader + "->" + daysHeaders[currentDayIndex] + "]");
+                            procDirtyMessage += currentProc.chName + ": несовпадение дат (" + blockHeader + "->" + daysHeaders[currentDayIndex] + ");\n";
+                            chIsDirty = true;
+                        }
                     }
-                    dayMatrix[currentDayIndex][currentProc.chReleaseOrder - 1] = currentProc.chName + currentBlock.substring(blockHeader.length());
+                    dayMatrix[currentDayIndex][currentProc.chReleaseOrder - 1] = currentProc.chName + lineSeparator + currentBlock.substring(blockHeader.length()).trim();
                 } else {
                     JTVProg.logPrint(this, 2, "блок [" + currBlockIndex + "] не является днем");
                 }
             }
-        }
+            if (chIsDirty == true) {
+                procIsDirty = true;
+            } else {
+                JTVProg.configer.markProcessed(currentProc.chFillOrder - 1);
+            }
+        }**/
         for (Integer currFileIndex = 0; currFileIndex < this.outDays.length; currFileIndex++) {
             this.outDays[currFileIndex] = new java.io.File(this.DAY_PATH + this.daysHeaders[currFileIndex] + ".txt");
             String dayContent = this.daysHeaders[currFileIndex];
+            JTVProg.procWindow.procLabel.setText(this.daysHeaders[currFileIndex]);
+            JTVProg.procWindow.procProgres.setValue(((currFileIndex + 1) / 7) * 100);
             for (Integer currChannelIndex = 0; currChannelIndex < this.getSetSize(); currChannelIndex++) {
                 String channelBlock = dayMatrix[currFileIndex][currChannelIndex];
                 if (channelBlock == null) {
                     JTVProg.logPrint(this, 1, "блок канала пуст! [" + currFileIndex + "," + currChannelIndex + "]");
                     channelBlock = "ПУСТОЙ БЛОК!!! [" + currFileIndex + "," + currChannelIndex + "]";
+                    procDirtyMessage += dayContent + ": пустой блок в канале (" + JTVProg.configer.Channels.getChannelByROrder(currChannelIndex + 1) + ");\n";
+                    procIsDirty = true;
                 }
                 dayContent = dayContent + lineSeparator + lineSeparator + channelBlock;
             }
@@ -423,6 +553,10 @@ public class chProcSet extends chSet{
                 JTVProg.logPrint(this, 0, "ошибка записи файла дня [" + this.daysHeaders[currFileIndex] + "]");
             }
         }
+        if (procIsDirty == true) {
+            JTVProg.logPrint(this, 0, "Обработка телепрограммы не удалась!");
+            JTVProg.warningMessage("Обработка телепрограммы не удалась из-за повреждения данных!\n"+ procDirtyMessage + "Свяжитесь с разработчиком!");
+        }
     }
     
     /**
@@ -432,7 +566,19 @@ public class chProcSet extends chSet{
      * @see #processDays() 
      */
     private String pickHead(String block) {
-        return block.split("\n")[0].trim();
+        //return block.split("\n")[0].trim();
+        if (block.length() > 0) {
+            Integer breakIndex = 1;
+            for (Integer index = 0; index < block.length(); index++) {
+                if (block.charAt(index) == '\n') {
+                    breakIndex = index;
+                    break;
+                }
+            }
+            return block.substring(0, breakIndex);
+        } else {
+            return "";
+        }
     }
     
     /**
@@ -480,19 +626,23 @@ public class chProcSet extends chSet{
                 while (splitIter.hasNext()) {
                     String currentSplitText = splitIter.next();
                     this.outputStack[0].add("БЛ-" + currentSplitIndex + ":" + chHeader);
-                    this.outputStack[1].add(currentSplitText.replace(chHeader, "БЛ-" + currentSplitIndex + ":" + chHeader));
+                    if (currentSplitIndex == 1) {
+                        this.outputStack[1].add(currentSplitText.replace(chHeader, "БЛ-" + currentSplitIndex + ":" + chHeader).trim());
+                    } else {
+                        this.outputStack[1].add("БЛ-" + currentSplitIndex + ":" + chHeader + lineSeparator + lineSeparator + currentSplitText.trim());
+                    }
                     ++currentSplitIndex;
                 }
             }
             else {
                 this.outputStack[0].add(currentProc.chName);
-                this.outputStack[1].add(currentProc.chStored);
+                this.outputStack[1].add(currentProc.chStored.trim());
             }
         }
         JTVProg.logPrint(this, 3, "подготовка выпуска по дням");
         for (Integer dayFileIndex = 0; dayFileIndex < outDays.length; dayFileIndex++) {
             java.io.File currDayFile = this.outDays[dayFileIndex];
-            String dayContent = this.getFileContent(currDayFile);
+            String dayContent = this.getFileContent(currDayFile).trim();
             if (dayContent.length() > maxLength) {
                 java.util.ArrayList<String> splittedDay = this.textSplit(dayContent);
                 String dayHeader = this.pickHead(dayContent);
@@ -501,7 +651,11 @@ public class chProcSet extends chSet{
                 while (splitIter.hasNext()) {
                     String currentSplitText = splitIter.next();
                     this.outputStack[2].add("БЛ-" + currentSplitIndex + ":" + dayHeader);
-                    this.outputStack[3].add(currentSplitText.replace(dayHeader, "БЛ-" + currentSplitIndex + ":" + dayHeader));
+                    if (currentSplitIndex == 1) {
+                        this.outputStack[3].add(currentSplitText.replace(dayHeader, "БЛ-" + currentSplitIndex + ":" + dayHeader));
+                    } else {
+                        this.outputStack[3].add("БЛ-" + currentSplitIndex + ":" + dayHeader + lineSeparator + lineSeparator + currentSplitText);
+                    }
                     ++currentSplitIndex;
                 }
             }
@@ -581,6 +735,6 @@ public class chProcSet extends chSet{
      */
     public void outputPrev() {
         --this.currentIndex;
-        this.currentChName = this.operOutHeaders.get(this.currentIndex - 1);
+        this.currentChName = this.operOutHeaders.get(this.currentIndex);
     }
 }
