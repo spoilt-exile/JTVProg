@@ -31,11 +31,12 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="jLabel3" alignment="0" min="-2" pref="220" max="-2" attributes="0"/>
-                  <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel5" alignment="0" min="-2" pref="220" max="-2" attributes="0"/>
                   <Component id="jLabel4" min="-2" pref="220" max="-2" attributes="0"/>
+                  <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel2" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -51,8 +52,10 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel3" min="-2" pref="29" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabel5" min="-2" pref="29" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="jLabel6" min="-2" pref="30" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="jScrollPane1" max="32767" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jLabel4" min="-2" pref="29" max="-2" attributes="0"/>
                   </Group>
                   <Component id="jLabel1" alignment="1" max="32767" attributes="0"/>
@@ -80,7 +83,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
-        <Property name="text" type="java.lang.String" value="&#x422;&#x435;&#x43a;&#x443;&#x449;&#x430;&#x44f; &#x432;&#x435;&#x440;&#x441;&#x438;&#x44f;: 0.2"/>
+        <Property name="text" type="java.lang.String" value="&#x422;&#x435;&#x43a;&#x443;&#x449;&#x430;&#x44f; &#x432;&#x435;&#x440;&#x441;&#x438;&#x44f;: 0.3"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
@@ -88,10 +91,40 @@
         <Property name="text" type="java.lang.String" value="&#xa9; &#x423;&#x41d;&#x418;&#x410; &#x423;&#x43a;&#x440;&#x438;&#x43d;&#x444;&#x43e;&#x440;&#x43c; 2011-2012."/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel5">
+    <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>
-        <Property name="text" type="java.lang.String" value="&#x410;&#x432;&#x442;&#x43e;&#x440;: &#x41d;&#x435;&#x43f;&#x43e;&#x447;&#x430;&#x442;&#x43e;&#x432; &#x421;&#x442;&#x430;&#x43d;&#x438;&#x441;&#x43b;&#x430;&#x432;"/>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Dialog" size="18" style="1"/>
+        </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="0" green="0" red="99" type="rgb"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="&#x422;&#x415;&#x421;&#x422;&#x41e;&#x412;&#x410;&#x42f; &#x412;&#x415;&#x420;&#x421;&#x418;&#x42f;"/>
       </Properties>
     </Component>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JTextArea" name="jTextArea1">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ee" green="ee" id="windowBorder" palette="3" red="ee" type="palette"/>
+            </Property>
+            <Property name="columns" type="int" value="20"/>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="rows" type="int" value="5"/>
+            <Property name="text" type="java.lang.String" value="&#x410;&#x432;&#x442;&#x43e;&#x440;: &#x41d;&#x435;&#x43f;&#x43e;&#x447;&#x430;&#x442;&#x43e;&#x432; &#x421;&#x442;&#x430;&#x43d;&#x438;&#x441;&#x43b;&#x430;&#x432;&#xa;&#xa;&#x420;&#x430;&#x441;&#x43f;&#x440;&#x43e;&#x441;&#x442;&#x440;&#x430;&#x43d;&#x435;&#x43d;&#x438;&#x435; &#x43f;&#x440;&#x43e;&#x433;&#x440;&#x430;&#x43c;&#x43c;&#x44b; &#xa;&#x43d;&#x430; &#x443;&#x441;&#x43b;&#x43e;&#x432;&#x438;&#x44f;&#x445; &#x43b;&#x438;&#x446;&#x435;&#x43d;&#x437;&#x438;&#x438; GNU GPLv2."/>
+            <Property name="disabledTextColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="0" green="0" red="0" type="rgb"/>
+            </Property>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
   </SubComponents>
 </Form>

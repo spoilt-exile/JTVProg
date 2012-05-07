@@ -103,6 +103,7 @@ public class logerFrame extends javax.swing.JFrame {
         logList = new javax.swing.JList();
         logLevel = new javax.swing.JComboBox();
         logFlush = new javax.swing.JButton();
+        saveBut = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Журнал событий");
@@ -120,10 +121,17 @@ public class logerFrame extends javax.swing.JFrame {
             }
         });
 
-        logFlush.setText("Очистить журнал");
+        logFlush.setText("Очистить");
         logFlush.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 logFlushActionPerformed(evt);
+            }
+        });
+
+        saveBut.setText("Сохранить");
+        saveBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButActionPerformed(evt);
             }
         });
 
@@ -134,10 +142,12 @@ public class logerFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 694, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(saveBut)
+                        .addGap(18, 18, 18)
                         .addComponent(logFlush)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 168, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(logLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -147,9 +157,10 @@ public class logerFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(logLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(logFlush))
+                    .addComponent(logFlush)
+                    .addComponent(saveBut))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -196,6 +207,40 @@ public class logerFrame extends javax.swing.JFrame {
         this.logListModel.removeAllElements();
     }//GEN-LAST:event_logFlushActionPerformed
 
+    private void saveButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButActionPerformed
+        JTVProg.logPrint(this, 2, "сохранение файла журнала");
+        try {
+            java.io.FileWriter logWriter = new java.io.FileWriter("log.txt");
+            java.util.ListIterator<messageEntry> logIter = this.messages.listIterator();
+            //String logString = "";
+            while (logIter.hasNext()) {
+                messageEntry currMessage = logIter.next();
+                String typeStr = "";
+                switch (currMessage.type) {
+                    case 0:
+                        typeStr = "критическая ошибка";
+                        break;
+                    case 1:
+                        typeStr = "ошибка";
+                        break;
+                    case 2:
+                        typeStr = "предупреждение";
+                        break;
+                    case 3:
+                        typeStr = "сообщение";
+                        break;
+                }
+                //logString = logString + "[" + currMessage.component + "]: " + typeStr + ">> '" + currMessage.message + "';" + JTVProg.configer.ChannelProcessor.lineSeparator;
+                logWriter.append("[" + currMessage.component + "]: " + typeStr + ">> '" + currMessage.message + "';" + JTVProg.configer.ChannelProcessor.lineSeparator);
+            }
+            //logWriter.write(logString);
+            logWriter.close();
+        } catch (java.io.IOException ex) {
+            JTVProg.logPrint(this, 0, "невозможно сохранить файл журанала!");
+            JTVProg.warningMessage("Программе не удалось сохранить файл журнала!");
+        }
+    }//GEN-LAST:event_saveButActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -236,5 +281,6 @@ public class logerFrame extends javax.swing.JFrame {
     private javax.swing.JButton logFlush;
     private javax.swing.JComboBox logLevel;
     private javax.swing.JList logList;
+    private javax.swing.JButton saveBut;
     // End of variables declaration//GEN-END:variables
 }
