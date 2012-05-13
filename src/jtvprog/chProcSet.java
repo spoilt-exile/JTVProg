@@ -18,7 +18,7 @@ public class chProcSet extends chSet{
     /**
      * System dependent line seporator
      */
-    public static String lineSeparator = System.getProperty("line.separator");
+    public static String lineSeparator = "\n";//System.getProperty("line.separator");
     
     /**
      * Relative path for channel release

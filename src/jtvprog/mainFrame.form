@@ -29,6 +29,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#x423;&#x434;&#x430;&#x43b;&#x438;&#x442;&#x44c; &#x444;&#x430;&#x439;&#x43b;&#x44b;"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tvDeleteFilesActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>

@@ -28,6 +28,34 @@ public class mainFrame extends javax.swing.JFrame {
         JTVProg.procWindow = null;
     }
     
+    /**
+     * Call file deletion dialog and delete files
+     */
+    public void callDelDialog() {
+        Object[] options = {"Да", "Нет"};
+        Integer result = javax.swing.JOptionPane.showOptionDialog(this,
+            "Удалить сохраненные файлы телепрограммы?",
+            "Вопрос",
+            javax.swing.JOptionPane.YES_NO_CANCEL_OPTION,
+            javax.swing.JOptionPane.QUESTION_MESSAGE,
+            null,
+            options,
+            options[1]);
+        if (result == 0) {
+            JTVProg.logPrint(this, 2, "удаление файлов телепрограммы");
+            java.io.File[] chFiles = new java.io.File("по каналам/").listFiles();
+            for (Integer chIndex = 0; chIndex < chFiles.length; chIndex++) {
+                chFiles[chIndex].delete();
+            }
+            java.io.File[] dayFiles =new java.io.File("по дням/").listFiles();
+            for (Integer dayIndex = 0; dayIndex < dayFiles.length; dayIndex++) {
+                dayFiles[dayIndex].delete();
+            }
+            new java.io.File("по каналам/").delete();
+            new java.io.File("по дням/").delete();
+        }
+    }
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -137,6 +165,11 @@ public class mainFrame extends javax.swing.JFrame {
         tvSettings.add(tvchReleaseOrder);
 
         tvDeleteFiles.setText("Удалить файлы");
+        tvDeleteFiles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tvDeleteFilesActionPerformed(evt);
+            }
+        });
         tvSettings.add(tvDeleteFiles);
 
         tvBar.add(tvSettings);
@@ -257,6 +290,10 @@ public class mainFrame extends javax.swing.JFrame {
     private void showLogBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_showLogBoxItemStateChanged
         JTVProg.setLogWindowVisibilty(this.showLogBox.isSelected());
     }//GEN-LAST:event_showLogBoxItemStateChanged
+
+    private void tvDeleteFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tvDeleteFilesActionPerformed
+        this.callDelDialog();
+    }//GEN-LAST:event_tvDeleteFilesActionPerformed
 
     /**
      * @param args the command line arguments
