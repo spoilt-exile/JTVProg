@@ -15,11 +15,29 @@ public class inputFrame extends javax.swing.JFrame {
     /** Creates new form inputFrame */
     public inputFrame() {
         initComponents();
-        JTVProg.logPrint(this, 3, "начало заполнения каналов");
-        JTVProg.configer.ChannelProcessor = new chProcSet(JTVProg.configer.Channels.pullList());
-        JTVProg.configer.ChannelProcessor.beginInput();
-        this.infoLabel.setText(JTVProg.configer.ChannelProcessor.currentChName + "[" + JTVProg.configer.ChannelProcessor.currentIndex + "/" + JTVProg.configer.ChannelProcessor.getSetSize() + "]");
-        this.inputPane.setText(JTVProg.configer.ChannelProcessor.getCurrentContent());
+        JTVProg.mainWindow.tvFillBut.setEnabled(false);
+        if (JTVProg.configer.ChannelProcessor == null) {
+            JTVProg.logPrint(this, 3, "начало заполнения каналов");
+            JTVProg.configer.ChannelProcessor = new chProcSet(JTVProg.configer.Channels.pullList());
+            JTVProg.configer.ChannelProcessor.beginInput();
+            this.infoLabel.setText(JTVProg.configer.ChannelProcessor.currentChName + "[" + JTVProg.configer.ChannelProcessor.currentIndex + "/" + JTVProg.configer.ChannelProcessor.getSetSize() + "]");
+            this.inputPane.setText(JTVProg.configer.ChannelProcessor.getCurrentContent());
+        } else {
+            JTVProg.logPrint(this, 3, "возобновление заполнения каналов");
+            this.infoLabel.setText(JTVProg.configer.ChannelProcessor.currentChName + "[" + JTVProg.configer.ChannelProcessor.currentIndex + "/" + JTVProg.configer.ChannelProcessor.getSetSize() + "]");
+            this.inputPane.setText(JTVProg.configer.ChannelProcessor.getCurrentContent());
+            if (JTVProg.configer.ChannelProcessor.currentIndex == 1) {
+                this.prevBut.setEnabled(false);
+                this.nextBut.setEnabled(true);
+            } else if (JTVProg.configer.ChannelProcessor.currentIndex == JTVProg.configer.ChannelProcessor.getSetSize()) {
+                this.nextBut.setEnabled(false);
+                this.finishBut.setEnabled(true);
+            } else {
+                this.prevBut.setEnabled(true);
+                this.nextBut.setEnabled(true);
+            }
+        }
+
     }
 
     /** This method is called from within the constructor to
@@ -43,6 +61,11 @@ public class inputFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Заполнение каналов");
         setIconImage(JTVProg.configer.jtvprogIcon);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jScrollPane1.setViewportView(inputPane);
 
@@ -196,6 +219,15 @@ public class inputFrame extends javax.swing.JFrame {
             this.dispose();
         }
     }//GEN-LAST:event_finishButActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if (JTVProg.configer.ChannelProcessor.isInputOver()) {
+            JTVProg.logPrint(this, 3, "отмена заполнения каналов. Состаяние сохранено.");
+            JTVProg.mainWindow.tvFillBut.setEnabled(true);
+        } else {
+            JTVProg.logPrint(this, 3, "окончание заполнения каналов.");
+        }
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

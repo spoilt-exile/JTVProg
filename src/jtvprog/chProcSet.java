@@ -304,6 +304,17 @@ public class chProcSet extends chSet{
     }
     
     /**
+     * Find out if input channel is over
+     * @return true if input state is on/false if not
+     */
+    public Boolean isInputOver() {
+        if (this.currentState == states.INPUT) {
+            return true;
+        }
+        return false;
+    }
+    
+    /**
      * End input and unlock processing mode
      */
     public void endInput() {
@@ -677,7 +688,8 @@ public class chProcSet extends chSet{
      */
     private java.util.ArrayList<String> textSplit(String splitted) {
         java.util.ArrayList<String> returned = new java.util.ArrayList<String>();
-        String[] pieces = splitted.split(lineSeparator + lineSeparator);
+        String relatedSeparator = this.getLineSeparator(splitted);
+        String[] pieces = splitted.split(relatedSeparator + relatedSeparator);
         String rstr = "";
         for (int cpiece = 0; cpiece < pieces.length; cpiece++) {
             String cstr = pieces[cpiece];
@@ -740,5 +752,18 @@ public class chProcSet extends chSet{
     public void outputPrev() {
         --this.currentIndex;
         this.currentChName = this.operOutHeaders.get(this.currentIndex);
+    }
+    
+    /**
+     * Get line separator which been used in given string
+     * @param givenStr text example
+     * @return line separator value for splitting
+     */
+    private String getLineSeparator(String givenStr) {
+        if (givenStr.indexOf("\r\n") == -1) {
+            return "\n";
+        } else {
+            return "\r\n";
+        }
     }
 }
