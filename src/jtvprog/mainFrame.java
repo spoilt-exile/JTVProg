@@ -42,17 +42,22 @@ public class mainFrame extends javax.swing.JFrame {
             options,
             options[1]);
         if (result == 0) {
-            JTVProg.logPrint(this, 2, "удаление файлов телепрограммы");
-            java.io.File[] chFiles = new java.io.File("по каналам/").listFiles();
-            for (Integer chIndex = 0; chIndex < chFiles.length; chIndex++) {
-                chFiles[chIndex].delete();
+            try {
+                JTVProg.logPrint(this, 2, "удаление файлов телепрограммы");
+                java.io.File[] chFiles = new java.io.File("по каналам/").listFiles();
+                for (Integer chIndex = 0; chIndex < chFiles.length; chIndex++) {
+                    chFiles[chIndex].delete();
+                }
+                java.io.File[] dayFiles =new java.io.File("по дням/").listFiles();
+                for (Integer dayIndex = 0; dayIndex < dayFiles.length; dayIndex++) {
+                    dayFiles[dayIndex].delete();
+                }
+                new java.io.File("по каналам/").delete();
+                new java.io.File("по дням/").delete();
+            } catch (NullPointerException ex) {
+                JTVProg.warningMessage("Файлы телепрограммы уже удалены!");
+                JTVProg.logPrint(this, 1, "файлы уже удалены!");
             }
-            java.io.File[] dayFiles =new java.io.File("по дням/").listFiles();
-            for (Integer dayIndex = 0; dayIndex < dayFiles.length; dayIndex++) {
-                dayFiles[dayIndex].delete();
-            }
-            new java.io.File("по каналам/").delete();
-            new java.io.File("по дням/").delete();
         }
     }
     

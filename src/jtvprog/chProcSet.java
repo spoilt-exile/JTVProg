@@ -18,7 +18,7 @@ public class chProcSet extends chSet{
     /**
      * System dependent line seporator
      */
-    public static String lineSeparator = "\n";//System.getProperty("line.separator");
+    public static String lineSeparator = JTVProg.configer.suggestLineSeparator();
     
     /**
      * Relative path for channel release
@@ -29,11 +29,6 @@ public class chProcSet extends chSet{
      * Relative path for day release
      */
     private String DAY_PATH = "по дням/";
-    
-    /**
-     * Relative path for ASOP release
-     */
-    //private String ASOP_PATH = "ASOP/";
     
     /**
      * List of channels processors units
@@ -145,7 +140,6 @@ public class chProcSet extends chSet{
     chProcSet() {
         new java.io.File(CH_PATH).mkdir();
         new java.io.File(DAY_PATH).mkdir();
-       // new java.io.File(ASOP_PATH).mkdir();
     }
     
     /**
@@ -385,8 +379,13 @@ public class chProcSet extends chSet{
         }
         
         //First condition
-        if (this.pickHead(content).contains(this.currentChName)) {
-            String[] blocks = content.split(lineSeparator + lineSeparator);
+        String channelHeader = this.pickHead(content);
+        if (channelHeader.contains(this.currentChName)) {
+            if (channelHeader.contains("нонсы") || channelHeader.contains("окращенно")) {
+                return "Введены анонсы или сокращенная версия канала!";
+            }
+            String ClineSeparator = this.getLineSeparator(content);
+            String[] blocks = content.split(ClineSeparator + ClineSeparator);
             Integer acceptedIndex = -1;
             for (Integer currBlockIndex = 0; currBlockIndex < blocks.length; currBlockIndex++) {
                 String currentBlock = blocks[currBlockIndex];
@@ -394,7 +393,7 @@ public class chProcSet extends chSet{
                 Integer currentDayIndex;
                 if ((currentDayIndex = recognizeDay(blockHeader)) != -1) {
                     if (daysHeaders[currentDayIndex] == null) {
-                        //JTVProg.logPrint(this, 3, "добавление дня [" + blockHeader + "]");
+                        JTVProg.logPrint(this, 3, "добавление дня [" + blockHeader + "]");
                         daysHeaders[currentDayIndex] = blockHeader;
                         //this.dayTempStack[currentDayIndex] = currentBlock.trim();
                     } else {
@@ -402,8 +401,8 @@ public class chProcSet extends chSet{
                         //Third condition
                         if (!blockHeader.equals(daysHeaders[currentDayIndex])) {
                             returned = this.currentUnit.chName + ": несовпадение дат (" + blockHeader + "->" + daysHeaders[currentDayIndex] + ");\n";
+                            JTVProg.logPrint(this, 1, "несовпадение дат: [" + blockHeader + "->" + daysHeaders[currentDayIndex] + "]");
                             break;
-                            //JTVProg.logPrint(this, 1, "несовпадение дат: [" + blockHeader + "->" + daysHeaders[currentDayIndex] + "]");
                         }
                     }
                     
@@ -416,7 +415,7 @@ public class chProcSet extends chSet{
                         acceptedIndex = currentDayIndex;
                     }
                 } else {
-                    //JTVProg.logPrint(this, 2, "блок [" + currBlockIndex + "] не является днем");
+                    JTVProg.logPrint(this, 2, "блок [" + currBlockIndex + "] не является днем");
                 }
             }
             
@@ -432,40 +431,6 @@ public class chProcSet extends chSet{
         
         if (returned == null) {
             JTVProg.configer.markProcessed(currentIndex - 1);
-        }
-        return returned;
-    }
-    
-    /**
-     * Check channel input 
-     * @param content current content of channel
-     * @return true if given content correspond to current channel / false of not
-     * @deprecated This method didn't provide full channel text parsing
-     */
-    public String checkInput(String content) {
-        String returned;
-        if (content.contains(this.currentChName)) {
-            returned = preProcess(content);
-        } else {
-            returned = "Введен не тот канал!\nНеобходимый канал: " + this.currentChName;
-        }
-        return returned;
-    }
-    
-    /**
-     * General check of channel format
-     * @param content current content of channel
-     * @return true if channel content contains all days of week
-     * @deprecated This method is too simple to parse channel
-     */
-    private String preProcess(String content) {
-        String returned = null;
-        for (Integer dayIndex = 0; dayIndex < this.daysPatterns.length; dayIndex++) {
-            if (content.contains(this.daysPatterns[dayIndex]) == false) {
-                JTVProg.logPrint(this, 1, "[" + this.currentChName + "]: текст не полон");
-                returned = "Текст канала [" + this.currentChName + "] не полон!\nПроверьте целостность текста!";
-                break;
-            }
         }
         return returned;
     }
@@ -507,45 +472,8 @@ public class chProcSet extends chSet{
         String procDirtyMessage = "\n\nОшибки обработки:\n";
         Boolean procIsDirty = false;
         JTVProg.logPrint(this, 3, "начата обработка каналов");
-        //String[][] dayMatrix = new String[7][this.getSetSize()];
-        /**java.util.ListIterator<chProcUnit> chUnits = this.chProcList.listIterator();
-        Integer chProgCounter = 1;
-        while (chUnits.hasNext()) {
-            Boolean chIsDirty = false;
-            chProcUnit currentProc = chUnits.next();
-            JTVProg.logPrint(this, 3, "обработка канала [" + currentProc.chName + "]");
-            JTVProg.procWindow.procLabel.setText(currentProc.chName);
-            JTVProg.procWindow.procProgres.setValue((chProgCounter / chProcList.size()) * 100 / 2);
-            chProgCounter++;
-            String[] blocks = currentProc.chStored.split(lineSeparator + lineSeparator);
-            for (Integer currBlockIndex = 0; currBlockIndex < blocks.length; currBlockIndex++) {
-                String currentBlock = blocks[currBlockIndex];
-                String blockHeader = pickHead(currentBlock);
-                Integer currentDayIndex;
-                if ((currentDayIndex = recognizeDay(blockHeader)) != -1) {
-                    JTVProg.logPrint(this, 3, "добавление дня [" + blockHeader + "]");
-                    if (daysHeaders[currentDayIndex] == null) {
-                        daysHeaders[currentDayIndex] = blockHeader;
-                    } else {
-                        if (!blockHeader.equals(daysHeaders[currentDayIndex])) {
-                            JTVProg.logPrint(this, 1, "несовпадение дат: [" + blockHeader + "->" + daysHeaders[currentDayIndex] + "]");
-                            procDirtyMessage += currentProc.chName + ": несовпадение дат (" + blockHeader + "->" + daysHeaders[currentDayIndex] + ");\n";
-                            chIsDirty = true;
-                        }
-                    }
-                    dayMatrix[currentDayIndex][currentProc.chReleaseOrder - 1] = currentProc.chName + lineSeparator + currentBlock.substring(blockHeader.length()).trim();
-                } else {
-                    JTVProg.logPrint(this, 2, "блок [" + currBlockIndex + "] не является днем");
-                }
-            }
-            if (chIsDirty == true) {
-                procIsDirty = true;
-            } else {
-                JTVProg.configer.markProcessed(currentProc.chFillOrder - 1);
-            }
-        }**/
         for (Integer currFileIndex = 0; currFileIndex < this.outDays.length; currFileIndex++) {
-            this.outDays[currFileIndex] = new java.io.File(this.DAY_PATH + this.daysHeaders[currFileIndex] + ".txt");
+            this.outDays[currFileIndex] = new java.io.File(this.DAY_PATH + this.daysHeaders[currFileIndex].replaceAll(",", "").trim() + ".txt");
             String dayContent = this.daysHeaders[currFileIndex];
             JTVProg.procWindow.procLabel.setText(this.daysHeaders[currFileIndex]);
             JTVProg.procWindow.procProgres.setValue(((currFileIndex + 1) / 7) * 100);
@@ -581,7 +509,6 @@ public class chProcSet extends chSet{
      * @see #processDays() 
      */
     private String pickHead(String block) {
-        //return block.split("\n")[0].trim();
         if (block.length() > 0) {
             Integer breakIndex = 1;
             for (Integer index = 0; index < block.length(); index++) {
@@ -590,7 +517,7 @@ public class chProcSet extends chSet{
                     break;
                 }
             }
-            return block.substring(0, breakIndex);
+            return block.substring(0, breakIndex - 1);
         } else {
             return "";
         }

@@ -186,4 +186,17 @@ public class config {
     public void markProcessed(Integer chIndex) {
         this.tvMainTable.setValueAt(true, chIndex, 2);
     }
+    
+    /**
+     * Suggest line separator from system properties
+     * @return line separator
+     */
+    public String suggestLineSeparator() {
+        String OS_NAME = System.getProperty("os.name").toUpperCase();
+        if (OS_NAME.contains("WINDOWS")) {
+            return "\r\n";
+        } else {
+            return "\n";
+        }
+    }
 }

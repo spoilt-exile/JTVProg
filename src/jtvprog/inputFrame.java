@@ -210,7 +210,7 @@ public class inputFrame extends javax.swing.JFrame {
 
     private void finishButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishButActionPerformed
         String errorMessage;
-        if ((errorMessage = JTVProg.configer.ChannelProcessor.checkInput(this.inputPane.getText())) != null) {
+        if ((errorMessage = JTVProg.configer.ChannelProcessor.checkInputDP(this.inputPane.getText())) != null) {
             JTVProg.warningMessage(errorMessage);
         } else {
             JTVProg.configer.ChannelProcessor.performInput(this.inputPane.getText());

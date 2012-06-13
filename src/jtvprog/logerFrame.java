@@ -73,7 +73,7 @@ public class logerFrame extends javax.swing.JFrame {
                 break;
             case 1:
                 typeStr = "ошибка";
-                typeColor = "#FF9100";
+                typeColor = "#B7B000";
                 break;
             case 2:
                 typeStr = "предупреждение";
