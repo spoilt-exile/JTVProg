@@ -408,7 +408,11 @@ public class chProcSet extends chSet{
                     
                     //Additional condition: sequence checking
                     if (acceptedIndex != currentDayIndex - 1) {
-                        returned = "Нарушение очередности!\nЗа " + this.daysPatterns_INSTRUMENTAL[acceptedIndex] + " следует " + this.daysPatterns_NOMINATIVE[currentDayIndex] + "?";
+                        if (acceptedIndex == -1) {
+                            returned = "Текст передачи начинается с " + this.daysPatterns_GENITIVE[currentDayIndex];
+                        } else {
+                            returned = "Нарушение очередности!\nЗа " + this.daysPatterns_INSTRUMENTAL[acceptedIndex] + " следует " + this.daysPatterns_NOMINATIVE[currentDayIndex] + "?";
+                        }
                         break;
                     } else {
                         this.dayTempStack[currentDayIndex] = currentBlock.replaceAll(blockHeader, this.currentChName).trim();
@@ -512,12 +516,12 @@ public class chProcSet extends chSet{
         if (block.length() > 0) {
             Integer breakIndex = 1;
             for (Integer index = 0; index < block.length(); index++) {
-                if (block.charAt(index) == '\n') {
+                if (block.charAt(index) == '\n' || block.charAt(index) == '\r') {
                     breakIndex = index;
                     break;
                 }
             }
-            return block.substring(0, breakIndex - 1);
+            return block.substring(0, breakIndex);
         } else {
             return "";
         }
