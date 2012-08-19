@@ -162,10 +162,7 @@ public class inputFrame extends javax.swing.JFrame {
                 JTVProg.warningMessage(errorMessage);
             }
             else {
-                if (!this.inputPane.getText().equals(JTVProg.configer.ChannelProcessor.getCurrentContent())) {
-                    JTVProg.configer.ChannelProcessor.performInput(this.inputPane.getText());
-                    //JTVProg.configer.markWrited(JTVProg.configer.ChannelProcessor.currentIndex - 1);
-                }
+                JTVProg.configer.ChannelProcessor.performInput(this.inputPane.getText());
                 JTVProg.configer.ChannelProcessor.inputNext();
                 this.prevBut.setEnabled(true);
                 this.infoLabel.setText(JTVProg.configer.ChannelProcessor.currentChName + "[" + JTVProg.configer.ChannelProcessor.currentIndex + "/" + JTVProg.configer.ChannelProcessor.getSetSize() + "]");

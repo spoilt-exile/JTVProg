@@ -280,9 +280,11 @@ public class chProcSet extends chSet{
                 returned = returned + reader.readLine() + lineSeparator;
             }
         } catch (FileNotFoundException ex) {
-            JTVProg.logPrint(this, 0, "файл [" + fileObj.getName() + "] не найден");
+            JTVProg.logPrint(this, 0, "файл [" + fileObj.getAbsolutePath() + "] не найден");
+            return "";
         } catch (IOException ex) {
             JTVProg.logPrint(this, 0, "[" + fileObj.getName() + "]: ошибка ввода/вывода");
+            return "";
         }
         return returned;
     }
@@ -343,7 +345,7 @@ public class chProcSet extends chSet{
      * @return content current content of channel
      */
     public String getCurrentContent() {
-        return this.currentUnit.chStored;
+        return this.getFileContent(this.currentUnit.chFile);
     }
     
     /**
