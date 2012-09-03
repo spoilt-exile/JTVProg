@@ -13,7 +13,7 @@ import java.awt.Toolkit;
  * @author Stanislav Nepochatov
  */
 public class procFrame extends javax.swing.JDialog {
-
+    
     /**
      * Creates new form procFrame
      */
@@ -22,7 +22,10 @@ public class procFrame extends javax.swing.JDialog {
         initComponents();
         java.awt.Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
-        new Thread(JTVProg.configer.ChannelProcessor.new processDaysThread()).start();
+    }
+    
+    public void runExec(Thread givenThread) {
+        givenThread.start();
     }
 
     /**
@@ -111,7 +114,7 @@ public class procFrame extends javax.swing.JDialog {
                         System.exit(0);
                     }
                 });
-                dialog.setVisible(true);
+                //dialog.setVisible(true);
             }
         });
     }

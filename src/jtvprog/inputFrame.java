@@ -16,6 +16,7 @@ public class inputFrame extends javax.swing.JFrame {
     public inputFrame() {
         initComponents();
         JTVProg.mainWindow.tvFillBut.setEnabled(false);
+        JTVProg.mainWindow.lockMenues();
         if (JTVProg.configer.ChannelProcessor == null) {
             JTVProg.logPrint(this, 3, "начало заполнения каналов");
             JTVProg.configer.ChannelProcessor = new chProcSet(JTVProg.configer.Channels.pullList());

@@ -58,7 +58,7 @@ public class config {
      */
     public String sysEncoding = System.getProperty("file.encoding");
     
-    /**
+    /**d
      * Default constructor, find properties file or create it
      * @throws IOException 
      */
@@ -198,5 +198,16 @@ public class config {
         } else {
             return "\n";
         }
+    }
+    
+    /**
+     * Reset channel processor.
+     * 
+     * <p>Using for reset channel processing in whole programm.</p>
+     */
+    public void resetProcessor() {
+        JTVProg.logPrint(this, 2, "произведен сброс состояния программы!");
+        this.createMainTable();
+        this.ChannelProcessor = null;
     }
 }

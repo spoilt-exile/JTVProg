@@ -345,7 +345,11 @@ public class chProcSet extends chSet{
      * @return content current content of channel
      */
     public String getCurrentContent() {
-        return this.getFileContent(this.currentUnit.chFile);
+        if (JTVProg.mainWindow.tvFillFromFile.isSelected()) {
+            return this.getFileContent(this.currentUnit.chFile);
+        } else {
+            return "";
+        }
     }
     
     /**
@@ -458,17 +462,55 @@ public class chProcSet extends chSet{
     }
     
     /**
+     * Thread for launching old release processing.
+     */
+    public class processOldReleaseThread extends Thread {
+        
+        @Override
+        public void run() {
+            JTVProg.logPrint(this, 2, "запущена процедура обработки старых файлов");
+            if (internalRun()) {
+                JTVProg.logPrint(this, 3, "подготовка старых файлов прошла удачно");
+                JTVProg.mainWindow.tvProcBut.setEnabled(false);
+                JTVProg.mainWindow.tvReleaseBut.setEnabled(true);
+            } else {
+                JTVProg.logPrint(this, 1, "подготовка старых файлов прервана, возвращена ошибка");
+            }
+            JTVProg.procWindow.dispose();
+        }
+        
+        public Boolean internalRun() {
+            JTVProg.configer.ChannelProcessor.beginInput();
+            for (Integer currChIndex = 1; currChIndex <= JTVProg.configer.ChannelProcessor.getSetSize(); currChIndex++) {
+                String recievedContent = JTVProg.configer.ChannelProcessor.getFileContent(JTVProg.configer.ChannelProcessor.currentUnit.chFile);
+                String checkError = JTVProg.configer.ChannelProcessor.checkInputDP(recievedContent);
+                if (checkError == null) {
+                    JTVProg.configer.ChannelProcessor.performInput(recievedContent);
+                    JTVProg.configer.ChannelProcessor.inputNext();
+                } else {
+                    JTVProg.warningMessage("[" + JTVProg.configer.ChannelProcessor.getUnit(currChIndex).chFilename + "]\n\n" + checkError);
+                    return false;
+                }
+            }
+            JTVProg.configer.ChannelProcessor.endInput();
+            JTVProg.configer.ChannelProcessor.processDays();
+            return true;
+        }
+        
+    }
+    
+    /**
      * Thread launching object for processDays() method
      * @see #processDays() 
      */
-    public class processDaysThread implements Runnable {
+    public class processDaysThread extends Thread {
         
         @Override
         public void run() {
             processDays();
-            JTVProg.mainWindow.procDaysTail();
+            JTVProg.procWindow.dispose();
+            JTVProg.mainWindow.tvReleaseBut.setEnabled(true);
         }
-        
     }
     
     /**

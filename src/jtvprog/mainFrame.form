@@ -25,6 +25,38 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tvchReleaseOrderActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JCheckBoxMenuItem" name="tvFillFromFile">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="&#x411;&#x440;&#x430;&#x442;&#x44c; &#x442;&#x435;&#x43a;&#x441;&#x442; &#x438;&#x437; &#x444;&#x430;&#x439;&#x43b;&#x430;"/>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+              </AuxValues>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="tvActions">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="&#x414;&#x435;&#x439;&#x441;&#x442;&#x432;&#x438;&#x44f;"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="tvOldRelease">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="&#x412;&#x44b;&#x43f;&#x443;&#x441;&#x442;&#x438;&#x442;&#x44c; &#x441;&#x442;&#x430;&#x440;&#x44b;&#x435; &#x444;&#x430;&#x439;&#x43b;&#x44b;"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tvOldReleaseActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="tvReset">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="&#x421;&#x431;&#x440;&#x43e;&#x441;&#x438;&#x442;&#x44c; &#x441;&#x43e;&#x441;&#x442;&#x43e;&#x44f;&#x43d;&#x438;&#x435; &#x43f;&#x440;&#x43e;&#x433;&#x440;&#x430;&#x43c;&#x43c;&#x44b;"/>
+                <Property name="enabled" type="boolean" value="false"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tvResetActionPerformed"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="tvDeleteFiles">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#x423;&#x434;&#x430;&#x43b;&#x438;&#x442;&#x44c; &#x444;&#x430;&#x439;&#x43b;&#x44b;"/>
@@ -120,7 +152,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="321" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="323" max="32767" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="tvFillBut" min="-2" max="-2" attributes="0"/>

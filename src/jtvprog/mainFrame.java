@@ -18,15 +18,6 @@ public class mainFrame extends javax.swing.JFrame {
         this.setVisible(true);
         JTVProg.logPrint(this, 3, "показ главного окна");
     }
-
-    /**
-     * Tail method for processDaysThread
-     */
-    public void procDaysTail() {
-        this.tvReleaseBut.setEnabled(true);
-        JTVProg.procWindow.dispose();
-        JTVProg.procWindow = null;
-    }
     
     /**
      * Call file deletion dialog and delete files
@@ -61,6 +52,46 @@ public class mainFrame extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Init execution of day processing;
+     */
+    public void initProcWindow() {
+        JTVProg.procWindow = new jtvprog.procFrame(this, false);
+        JTVProg.procWindow.setVisible(true);
+        JTVProg.procWindow.runExec(JTVProg.configer.ChannelProcessor.new processDaysThread());
+    }
+    
+    /**
+     * Init execution of old release file processing;
+     */
+    public void initReleaseWindow() {
+        JTVProg.procWindow = new jtvprog.procFrame(this, false);
+        JTVProg.procWindow.setVisible(true);
+        JTVProg.procWindow.runExec(JTVProg.configer.ChannelProcessor.new processOldReleaseThread());
+    }
+    
+    /**
+     * Lock menues to prevent data damage;
+     */
+    public void lockMenues() {
+        this.tvOldRelease.setEnabled(false);
+        this.tvDeleteFiles.setEnabled(false);
+        this.tvchReleaseOrder.setEnabled(false);
+        this.tvchSettings.setEnabled(false);
+        this.tvReset.setEnabled(true);
+    }
+    
+    /**
+     * Unlock menues after program complete reset;
+     */
+    public void unlockMenues() {
+        this.tvOldRelease.setEnabled(true);
+        this.tvDeleteFiles.setEnabled(true);
+        this.tvchReleaseOrder.setEnabled(true);
+        this.tvchSettings.setEnabled(true);
+        this.tvReset.setEnabled(false);
+    }
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -80,6 +111,10 @@ public class mainFrame extends javax.swing.JFrame {
         tvSettings = new javax.swing.JMenu();
         tvchSettings = new javax.swing.JMenuItem();
         tvchReleaseOrder = new javax.swing.JMenuItem();
+        tvFillFromFile = new javax.swing.JCheckBoxMenuItem();
+        tvActions = new javax.swing.JMenu();
+        tvOldRelease = new javax.swing.JMenuItem();
+        tvReset = new javax.swing.JMenuItem();
         tvDeleteFiles = new javax.swing.JMenuItem();
         tvOther = new javax.swing.JMenu();
         showLogBox = new javax.swing.JCheckBoxMenuItem();
@@ -169,15 +204,39 @@ public class mainFrame extends javax.swing.JFrame {
         });
         tvSettings.add(tvchReleaseOrder);
 
+        tvFillFromFile.setText("Брать текст из файла");
+        tvSettings.add(tvFillFromFile);
+
+        tvBar.add(tvSettings);
+
+        tvActions.setText("Действия");
+
+        tvOldRelease.setText("Выпустить старые файлы");
+        tvOldRelease.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tvOldReleaseActionPerformed(evt);
+            }
+        });
+        tvActions.add(tvOldRelease);
+
+        tvReset.setText("Сбросить состояние программы");
+        tvReset.setEnabled(false);
+        tvReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tvResetActionPerformed(evt);
+            }
+        });
+        tvActions.add(tvReset);
+
         tvDeleteFiles.setText("Удалить файлы");
         tvDeleteFiles.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tvDeleteFilesActionPerformed(evt);
             }
         });
-        tvSettings.add(tvDeleteFiles);
+        tvActions.add(tvDeleteFiles);
 
-        tvBar.add(tvSettings);
+        tvBar.add(tvActions);
 
         tvOther.setText("Справка");
 
@@ -231,7 +290,7 @@ public class mainFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tvFillBut)
@@ -277,9 +336,7 @@ public class mainFrame extends javax.swing.JFrame {
 
     private void tvProcButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tvProcButActionPerformed
         this.tvProcBut.setEnabled(false);
-        //JTVProg.configer.ChannelProcessor.processDays();
-        JTVProg.procWindow = new procFrame(this, true);
-        JTVProg.procWindow.setVisible(true);
+        this.initProcWindow();
     }//GEN-LAST:event_tvProcButActionPerformed
 
     private void tvReleaseButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tvReleaseButActionPerformed
@@ -299,6 +356,32 @@ public class mainFrame extends javax.swing.JFrame {
     private void tvDeleteFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tvDeleteFilesActionPerformed
         this.callDelDialog();
     }//GEN-LAST:event_tvDeleteFilesActionPerformed
+
+    private void tvResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tvResetActionPerformed
+        Integer result;
+        Object[] options = {"Да", "Нет"};
+        result = javax.swing.JOptionPane.showOptionDialog(this,
+            "Вы уверены, что хотите сбросить состояние программы?\nДанные текущего выпуска будут утеряны!",
+            "Вопрос",
+            javax.swing.JOptionPane.YES_NO_CANCEL_OPTION,
+            javax.swing.JOptionPane.QUESTION_MESSAGE,
+            null,
+            options,
+            options[1]);
+        if (result == 0) {
+            JTVProg.configer.resetProcessor();
+            this.unlockMenues();
+            this.tvProcBut.setEnabled(false);
+            this.tvReleaseBut.setEnabled(false);
+            this.tvFillBut.setEnabled(true);
+        }
+    }//GEN-LAST:event_tvResetActionPerformed
+
+    private void tvOldReleaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tvOldReleaseActionPerformed
+        JTVProg.configer.ChannelProcessor = new chProcSet(JTVProg.configer.Channels.pullList());
+        this.lockMenues();
+        this.initReleaseWindow();
+    }//GEN-LAST:event_tvOldReleaseActionPerformed
 
     /**
      * @param args the command line arguments
@@ -340,13 +423,17 @@ public class mainFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JCheckBoxMenuItem showLogBox;
     private javax.swing.JMenuItem tvAbout;
+    private javax.swing.JMenu tvActions;
     private javax.swing.JMenuBar tvBar;
     private javax.swing.JMenuItem tvDeleteFiles;
     public javax.swing.JButton tvFillBut;
+    public javax.swing.JCheckBoxMenuItem tvFillFromFile;
     private javax.swing.JMenuItem tvHelp;
+    private javax.swing.JMenuItem tvOldRelease;
     private javax.swing.JMenu tvOther;
     public javax.swing.JButton tvProcBut;
     public javax.swing.JButton tvReleaseBut;
+    private javax.swing.JMenuItem tvReset;
     private javax.swing.JMenu tvSettings;
     private javax.swing.JMenuItem tvchReleaseOrder;
     private javax.swing.JMenuItem tvchSettings;
