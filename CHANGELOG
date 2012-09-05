@@ -1,0 +1,84 @@
+==========================================================================================
+JTVProg init commit (Dec 7th 2011)
+
+Changes:
+ + added main skeleton of application;
+==========================================================================================
+JTVProg second draft (Dec 29th 2011)
+
+Changes:
+ + added main windows and frames;
+ + added configuration dealing object;
+==========================================================================================
+JTVProg third draft (Feb 11th 2012)
+
+Changes:
+ + added support for configuration reading (XML support);
+ + added chSet class for storing and managing channels list;
+ + added ability to manipulate channels list;
+==========================================================================================
+JTVProg v0.1 (Mar 22th 2012)
+
+Changes:
+ + input capability and channels file writing;
+ + output dialog for channel and day release;
+ + added channel processing;
+ * migration from XML to properties configuration;
+ - XML support code was removed;
+
+Fixes:
+ X saving release order for channels;
+==========================================================================================
+JTVProg v0.2 (Apr 26th 2012)
+
+Changes:
+ + new method chProcSet.checkInputDP() with deeper channel processing added;
+ + general information added;
+ + clipboard maintaining code added;
+ + added logos;
+ + added code for main table marking;
+ + some buttons added (Paste and Reset) to inputFrame;
+ * day processing now executed in separate thread;
+ * from now channel splitting will be executed in chProcSet.checkInputDP() method;
+ * log window from now can be hided;
+ * processing error message conclusion added;
+ * from now separate button finish input;
+ - chProcSet.checkInput() method was marked as deprecated;
+
+Fixes:
+ X selecting wrong element in tvSettingsFrame;
+ X getting OutOfBoundsException in ouput window while switching release mode;
+ X last input hasn't been checked;
+==========================================================================================
+JTVProg v0.3 (Sep 5th 2012)
+
+Changes:
+ + add license information to aboutFrame;
+ + add save button to logFrame (emergency log dump);
+ + add file deletion dialog and file deletion code;
+ + added code for announcements and shortended text detection;
+ + line separator suggestion added (JTVProg.config.suggestLineSeparator());
+ + added code for saving program log;
+ + previous release files reusing added;
+ + added code for complete and configurable old release files resusing;
+ + added new menu 'Actions';
+ + added command for reset state of programm;
+ * change version information;
+ * color output for error messages was changed;
+ * set chProcSet.lineSeparator field as public;
+ * from now procFrame instance can execute any thread;
+ * menues locks from lockMenues() and unlockMenues() methods in mainFrame class instance;
+ - cleanup of the unused code blocks;
+
+Fixes:
+ X delete GMT label in final channel text;
+ X fix error with twice Fill button pressing and data corruption;
+ X fix error with line separator in Windows, now program can define separator by itself;
+ X day program saving error fixed (NTFS unsupported symbols deletion);
+ X chProcSet.pickHead fix: now function take line without line separator char;
+ X fixing finishing inputing without deep check of channel;
+ X fix for chProcSet.checkInputDP method: now checking can handle error if channel text
+   begins not from Monday;
+ X fix for chProcSet.pickHead method: Windows line separator
+   char now using as break point (no index cutting);
+==========================================================================================

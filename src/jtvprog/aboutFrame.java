@@ -46,7 +46,7 @@ public class aboutFrame extends javax.swing.JDialog {
         jLabel2.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabel2.setText("Обработчик телепрограммы");
 
-        jLabel3.setText("Текущая версия: 0.3 RC1");
+        jLabel3.setText("Текущая версия: 0.3");
 
         jLabel4.setText("© УНИА Укринформ 2011-2012.");
 
