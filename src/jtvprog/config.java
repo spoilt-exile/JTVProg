@@ -95,17 +95,11 @@ public class config {
             try {
                 String encChName = new String(ConfigProps.getProperty(tvPattern + ".name").getBytes("ISO-8859-1"), propsEncoding);;
                 String encFileName = new String(ConfigProps.getProperty(tvPattern + ".file_name").getBytes("ISO-8859-1"), propsEncoding);;
-                if (!sysEncoding.equals(propsEncoding)) {
-                    //encChName = new String(encChName.getBytes(propsEncoding), sysEncoding);
-                    //encFileName = new String(encChName.getBytes(propsEncoding), sysEncoding);
-                }
                 this.Channels.addChannel(
-                    //new String(ConfigProps.getProperty(tvPattern + ".name").getBytes("ISO-8859-1"), this.sysEncoding),
                     encChName, 
                     Integer.parseInt(ConfigProps.getProperty(tvPattern + ".fill_order")), 
                     Integer.parseInt(ConfigProps.getProperty(tvPattern + ".release_order")), 
                     encFileName
-                    //new String(ConfigProps.getProperty(tvPattern + ".file_name").getBytes("ISO-8859-1"), this.sysEncoding)
                 );
             } catch (UnsupportedEncodingException ex) {
                 JTVProg.logPrint(this, 1, "ошибка декодирования файла конфигурации");
@@ -134,30 +128,26 @@ public class config {
      */
     private DefaultTableModel getMainTableModel() {
             return new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+                new Object [][] {},
+                new String [] {"Название канала", "Сохранен", "Обработан"}
+            ) {
+                Class[] types = new Class [] {
+                    java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
+                };
+                boolean[] canEdit = new boolean [] {
+                    false, false, false
+                };
 
-            },
-            new String [] {
-                "Название канала", "Сохранен", "Обработан"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
+                @Override
+                public Class getColumnClass(int columnIndex) {
+                    return types [columnIndex];
+                }
+
+                @Override
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return canEdit [columnIndex];
+                }
             };
-            boolean[] canEdit = new boolean [] {
-                false, false, false
-            };
-
-            @Override
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            @Override
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        };
     }
     
     /**

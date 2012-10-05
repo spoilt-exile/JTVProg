@@ -82,3 +82,11 @@ Fixes:
  X fix for chProcSet.pickHead method: Windows line separator
    char now using as break point (no index cutting);
 ==========================================================================================
+JTVProg v0.3r1 (Oct 5th 2012)
+
+Changes:
+ - some old code removing;
+
+Fixes:
+ X fix backward button in input window (shows empty area instead of channel's text);
+==========================================================================================

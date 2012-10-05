@@ -257,7 +257,6 @@ public class chSet {
         chEntry placedChannel = this.lastFound;
         placedChannel.chFillOrder--;
         givenChannel.chFillOrder++;
-        //JTVProg.logPrint(this, 3, "новый индекс =" + givenChannel.chFillOrder);
     }
     
      /**
@@ -271,7 +270,6 @@ public class chSet {
         chEntry placedChannel = this.lastFound;
         placedChannel.chReleaseOrder++;
         givenChannel.chReleaseOrder--;
-        //JTVProg.logPrint(this, 3, "новый индекс =" + givenChannel.chReleaseOrder);
     }
     
     /*
@@ -285,7 +283,6 @@ public class chSet {
         chEntry placedChannel = this.lastFound;
         placedChannel.chReleaseOrder--;
         givenChannel.chReleaseOrder++;
-        //JTVProg.logPrint(this, 3, "новый индекс =" + givenChannel.chReleaseOrder);
     }
     
     /**
@@ -346,8 +343,6 @@ public class chSet {
             String chName = this.getChannelByFOrder(id);
             chEntry Channel =  this.lastFound;
             try {
-                //inputProperties.setProperty(tvPattern + ".name", new String(chName.getBytes(System.getProperty("file.encoding")), "UTF-8"));
-                //inputProperties.setProperty(tvPattern + ".file_name", new String(Channel.chFilename.getBytes(System.getProperty("file.encoding")), "UTF-8"));
                 inputProperties.setProperty(tvPattern + ".name", new String(chName.getBytes(), JTVProg.configer.sysEncoding));
                 inputProperties.setProperty(tvPattern + ".file_name", new String(Channel.chFilename.getBytes(), JTVProg.configer.sysEncoding));
             } catch (java.io.UnsupportedEncodingException ex) {

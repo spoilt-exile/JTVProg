@@ -345,10 +345,10 @@ public class chProcSet extends chSet{
      * @return content current content of channel
      */
     public String getCurrentContent() {
-        if (JTVProg.mainWindow.tvFillFromFile.isSelected()) {
+        if (JTVProg.mainWindow.tvFillFromFile.isSelected() && this.currentUnit.chStored.isEmpty()) {
             return this.getFileContent(this.currentUnit.chFile);
         } else {
-            return "";
+            return this.currentUnit.chStored;
         }
     }
     
