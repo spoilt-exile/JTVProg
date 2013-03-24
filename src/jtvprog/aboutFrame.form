@@ -85,7 +85,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
-        <Property name="text" type="java.lang.String" value="&#x422;&#x435;&#x43a;&#x443;&#x449;&#x430;&#x44f; &#x432;&#x435;&#x440;&#x441;&#x438;&#x44f;: 0.3r1"/>
+        <Property name="text" type="java.lang.String" value="&#x422;&#x435;&#x43a;&#x443;&#x449;&#x430;&#x44f; &#x432;&#x435;&#x440;&#x441;&#x438;&#x44f;: 0.3r2"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">

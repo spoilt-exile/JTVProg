@@ -90,3 +90,8 @@ Changes:
 Fixes:
  X fix backward button in input window (shows empty area instead of channel's text);
 ==========================================================================================
+JTVProg v0.3r2 (Mar 24th 2013)
+
+Fixes: 
+ X force to save files with Windows line separation (CRLF);
+==========================================================================================

@@ -202,7 +202,7 @@ public class chProcSet extends chSet{
         public void writeChannel() {
             try {
                 java.io.FileWriter chWriter = new java.io.FileWriter(chFile);
-                chWriter.write(chStored);
+                chWriter.write(chStored.replaceAll("\n", "\r\n"));
                 chWriter.close();
                 JTVProg.logPrint(this, 3, "файл канала [" + this.chName + "] успешно сохранен");
             } catch (IOException ex) {
@@ -537,7 +537,7 @@ public class chProcSet extends chSet{
             }
             try {
                 java.io.FileWriter dayWriter = new java.io.FileWriter(this.outDays[currFileIndex]);
-                dayWriter.write(dayContent);
+                dayWriter.write(dayContent.replaceAll("\n", "\r\n"));
                 dayWriter.close();
                 JTVProg.logPrint(this, 3, "файл дня [" + this.daysHeaders[currFileIndex] + "] успешно сохранен");
             } catch (IOException ex) {
