@@ -49,6 +49,18 @@ public class JTVProg {
     public static clipboardProvider cilper = new clipboardProvider();
     
     /**
+     * Global pass channel switch;
+     * @since JTVProg v0.3r4
+     */
+    private static Boolean globalPassSwitch = false;
+    
+    /**
+     * List of passed channels;
+     * @since JTVProg v0.3r4
+     */
+    private static java.util.ArrayList<String> globalPassList = new java.util.ArrayList();
+    
+    /**
      * Main method
      * @param args the command line arguments
      */
@@ -121,6 +133,61 @@ public class JTVProg {
     public static void warningMessage (String Message) {
         final JPanel panel = new JPanel();
         JOptionPane.showMessageDialog(panel, Message, "Внимание!", JOptionPane.WARNING_MESSAGE);
+    }
+    
+    /**
+     * Set channel as passed empty.
+     * @param chName name of channel;
+     * @param passFlag flag of passing;
+     * @since JTVProg v0.3r4
+     */
+    public static void setPass(String chName, Boolean passFlag) {
+        if (passFlag) {
+            if (JTVProg.globalPassSwitch == false) {
+                JTVProg.globalPassSwitch = true;
+                JTVProg.logPrint("JTVProg", 2, "включен режим неполного выпуска.");
+            }
+            if (!JTVProg.globalPassList.contains(chName)) {
+                JTVProg.globalPassList.add(chName);
+            }
+        } else {
+            JTVProg.globalPassList.remove(chName);
+            if (JTVProg.globalPassList.isEmpty()) {
+                JTVProg.globalPassSwitch = false;
+                JTVProg.logPrint("JTVProg", 3, "переход в нормальный режим.");
+            }
+        }
+    }
+    
+    /**
+     * Return string list of passed channels.
+     * @return string list.
+     * @since JTVProg v0.3r4
+     */
+    public static String getPassList() {
+        StringBuffer buf = new StringBuffer();
+        for (String currCh : JTVProg.globalPassList) {
+            buf.append(currCh + "\n");
+        }
+        return buf.toString();
+    }
+    
+    /**
+     * Find out pass mode;
+     * @return pass flag.
+     * @since JTVProg v0.3r4
+     */
+    public static Boolean isPass() {
+        return JTVProg.globalPassSwitch;
+    }
+    
+    /**
+     * Reset state of passing channels.
+     * @since JTVProg v0.3r4
+     */
+    public static void resetPass() {
+        JTVProg.globalPassList = new java.util.ArrayList<String>();
+        JTVProg.globalPassSwitch = false;
     }
     
     /**

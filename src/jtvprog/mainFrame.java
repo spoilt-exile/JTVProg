@@ -369,6 +369,7 @@ public class mainFrame extends javax.swing.JFrame {
             options,
             options[1]);
         if (result == 0) {
+            JTVProg.resetPass();
             JTVProg.configer.resetProcessor();
             this.unlockMenues();
             this.tvProcBut.setEnabled(false);

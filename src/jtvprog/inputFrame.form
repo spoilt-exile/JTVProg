@@ -10,6 +10,7 @@
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <Events>
     <EventHandler event="windowClosing" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowClosing"/>
@@ -44,6 +45,8 @@
                       <Component id="pasteBut" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="flushBut" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="passBox" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="finishBut" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -68,6 +71,7 @@
                   <Component id="pasteBut" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="flushBut" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="finishBut" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="passBox" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -139,6 +143,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="finishButActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="passBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&#x41f;&#x440;&#x43e;&#x43f;&#x443;&#x441;&#x442;&#x438;&#x442;&#x44c; &#x43a;&#x430;&#x43d;&#x430;&#x43b;"/>
+      </Properties>
+      <Events>
+        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="passBoxItemStateChanged"/>
       </Events>
     </Component>
   </SubComponents>

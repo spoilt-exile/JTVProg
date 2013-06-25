@@ -192,6 +192,12 @@ public class chProcSet extends chSet{
         private java.io.File chFile = new java.io.File(CH_PATH + this.chFilename);
         
         /**
+         * Indicate if channel is marked as empty by user.
+         * @since JTVProg v0.3r4
+         */
+        public Boolean isPassedNull = false;
+        
+        /**
          * Temporary string content of channel
          */
         public String chStored = "";
@@ -377,6 +383,14 @@ public class chProcSet extends chSet{
      * @since JTVProg v0.2
      */
     public String checkInputDP(String content) {
+        
+        /**
+         * Pass check if channel is passed.
+         */
+        if (this.currentUnit.isPassedNull) {
+            return null;
+        }
+        
         String returned = null;
         
         String gmtLabel = "GMT + 2";
@@ -450,6 +464,14 @@ public class chProcSet extends chSet{
      * @param content content current content of channel
      */
     public void performInput(String content) {
+        
+        /**
+         * Pass input if channel is passed;
+         */
+        if (this.currentUnit.isPassedNull) {
+            return;
+        }
+        
         String gmtLabel = "GMT + 2";
         if (content.contains(gmtLabel)) {
             content = content.substring(content.indexOf(gmtLabel) + gmtLabel.length()).trim();
@@ -520,6 +542,7 @@ public class chProcSet extends chSet{
         String procDirtyMessage = "\n\nОшибки обработки:\n";
         Boolean procIsDirty = false;
         JTVProg.logPrint(this, 3, "начата обработка каналов");
+        this.currentState = states.OUTPUT;
         for (Integer currFileIndex = 0; currFileIndex < this.outDays.length; currFileIndex++) {
             this.outDays[currFileIndex] = new java.io.File(this.DAY_PATH + this.daysHeaders[currFileIndex].replaceAll(",", "").trim() + ".txt");
             String dayContent = this.daysHeaders[currFileIndex];
@@ -527,13 +550,16 @@ public class chProcSet extends chSet{
             JTVProg.procWindow.procProgres.setValue(((currFileIndex + 1) / 7) * 100);
             for (Integer currChannelIndex = 0; currChannelIndex < this.getSetSize(); currChannelIndex++) {
                 String channelBlock = dayMatrix[currFileIndex][currChannelIndex];
-                if (channelBlock == null) {
+                if (channelBlock == null && !this.getUnit(currChannelIndex + 1).isPassedNull) {
                     JTVProg.logPrint(this, 1, "блок канала пуст! [" + currFileIndex + "," + currChannelIndex + "]");
                     channelBlock = "ПУСТОЙ БЛОК!!! [" + currFileIndex + "," + currChannelIndex + "]";
                     procDirtyMessage += dayContent + ": пустой блок в канале (" + JTVProg.configer.Channels.getChannelByROrder(currChannelIndex + 1) + ");\n";
                     procIsDirty = true;
+                } else if (this.getUnit(currChannelIndex + 1).isPassedNull) {
+                    continue;
+                } else {
+                    dayContent = dayContent + lineSeparator + lineSeparator + channelBlock;
                 }
-                dayContent = dayContent + lineSeparator + lineSeparator + channelBlock;
             }
             try {
                 java.io.FileWriter dayWriter = new java.io.FileWriter(this.outDays[currFileIndex]);
@@ -548,6 +574,7 @@ public class chProcSet extends chSet{
             JTVProg.logPrint(this, 0, "Обработка телепрограммы не удалась!");
             JTVProg.warningMessage("Обработка телепрограммы не удалась из-за повреждения данных!\n"+ procDirtyMessage + "Свяжитесь с разработчиком!");
         }
+        this.currentState = states.EMPTY;
     }
     
     /**
@@ -608,6 +635,10 @@ public class chProcSet extends chSet{
         JTVProg.logPrint(this, 3, "подготовка выпуска по каналам");
         for (Integer currentRIndex = 1; currentRIndex < this.getSetSize() + 1; currentRIndex++) {
             chProcUnit currentProc = this.getUnit(currentRIndex);
+            //Pass channel if passed;
+            if (currentProc.isPassedNull) {
+                continue;
+            }
             if (currentProc.chStored.length() > maxLength) {
                 java.util.ArrayList<String> splittedStored = this.textSplit(currentProc.chStored);
                 String chHeader = this.pickHead(currentProc.chStored);

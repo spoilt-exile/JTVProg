@@ -25,6 +25,9 @@ public class outputFrame extends javax.swing.JDialog {
         initComponents();
         JTVProg.configer.ChannelProcessor.beginOutput();
         buildList();
+        if (JTVProg.isPass()) {
+            JTVProg.warningMessage("В данном выпуске пропущены каналы:\n" + JTVProg.getPassList() + "\nОбязательно перевыпустите программу позже.");
+        }
     }
     
     /**

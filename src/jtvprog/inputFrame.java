@@ -58,6 +58,7 @@ public class inputFrame extends javax.swing.JFrame {
         pasteBut = new javax.swing.JButton();
         flushBut = new javax.swing.JButton();
         finishBut = new javax.swing.JButton();
+        passBox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Заполнение каналов");
@@ -113,6 +114,13 @@ public class inputFrame extends javax.swing.JFrame {
             }
         });
 
+        passBox.setText("Пропустить канал");
+        passBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                passBoxItemStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -131,6 +139,8 @@ public class inputFrame extends javax.swing.JFrame {
                         .addComponent(pasteBut)
                         .addGap(18, 18, 18)
                         .addComponent(flushBut)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(passBox)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(finishBut)))
                 .addContainerGap())
@@ -149,7 +159,8 @@ public class inputFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(pasteBut)
                     .addComponent(flushBut)
-                    .addComponent(finishBut))
+                    .addComponent(finishBut)
+                    .addComponent(passBox))
                 .addContainerGap())
         );
 
@@ -168,18 +179,13 @@ public class inputFrame extends javax.swing.JFrame {
                 this.prevBut.setEnabled(true);
                 this.infoLabel.setText(JTVProg.configer.ChannelProcessor.currentChName + "[" + JTVProg.configer.ChannelProcessor.currentIndex + "/" + JTVProg.configer.ChannelProcessor.getSetSize() + "]");
                 this.inputPane.setText(JTVProg.configer.ChannelProcessor.getCurrentContent());
+                this.passBox.setSelected(JTVProg.configer.ChannelProcessor.currentUnit.isPassedNull);
             }
             if (JTVProg.configer.ChannelProcessor.currentIndex == JTVProg.configer.ChannelProcessor.getSetSize()) {
                 this.finishBut.setEnabled(true);
                 this.nextBut.setEnabled(false);
             }
-        } /**else if (JTVProg.configer.ChannelProcessor.currentIndex == JTVProg.configer.ChannelProcessor.getSetSize()) {
-            if (!this.inputPane.getText().equals(JTVProg.configer.ChannelProcessor.getCurrentContent())) {
-                JTVProg.configer.ChannelProcessor.performInput(this.inputPane.getText());
-                JTVProg.configer.ChannelProcessor.endInput();
-                this.dispose();
-            }
-        }**/
+        }
     }//GEN-LAST:event_nextButActionPerformed
 
     private void prevButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevButActionPerformed
@@ -190,6 +196,7 @@ public class inputFrame extends javax.swing.JFrame {
         JTVProg.configer.ChannelProcessor.inputPrev();
         this.infoLabel.setText(JTVProg.configer.ChannelProcessor.currentChName + "[" + JTVProg.configer.ChannelProcessor.currentIndex + "/" + JTVProg.configer.ChannelProcessor.getSetSize() + "]");
         this.inputPane.setText(JTVProg.configer.ChannelProcessor.getCurrentContent());
+        this.passBox.setSelected(JTVProg.configer.ChannelProcessor.currentUnit.isPassedNull);
         if (this.nextBut.isEnabled() == false) {
             this.nextBut.setEnabled(true);
         }
@@ -226,6 +233,13 @@ public class inputFrame extends javax.swing.JFrame {
             JTVProg.logPrint(this, 3, "окончание заполнения каналов.");
         }
     }//GEN-LAST:event_formWindowClosing
+
+    private void passBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_passBoxItemStateChanged
+        Boolean flag = this.passBox.isSelected();
+        JTVProg.configer.ChannelProcessor.currentUnit.isPassedNull = flag;
+        JTVProg.setPass(JTVProg.configer.ChannelProcessor.currentUnit.chName, flag);
+        this.inputPane.setEditable(!flag);
+    }//GEN-LAST:event_passBoxItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -269,6 +283,7 @@ public class inputFrame extends javax.swing.JFrame {
     private javax.swing.JTextPane inputPane;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton nextBut;
+    private javax.swing.JCheckBox passBox;
     private javax.swing.JButton pasteBut;
     private javax.swing.JButton prevBut;
     // End of variables declaration//GEN-END:variables
