@@ -100,3 +100,10 @@ JTVProg v0.3r3 (Apr 16th 2013)
 Fixes:
  X fix releasing old files freezing;
 ==========================================================================================
+JTVProg v0.3r4 (Jun 25th 2013)
+
+Changes:
+ + add passing channel feature: user can pass some absent channels and release incomplete 
+   tv program;
+ - some old code cleanup;
+==========================================================================================
