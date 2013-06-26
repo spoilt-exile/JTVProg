@@ -61,6 +61,11 @@ public class JTVProg {
     private static java.util.ArrayList<String> globalPassList = new java.util.ArrayList();
     
     /**
+     * Ribbon application object.
+     */
+    public static AppComponents.RibbonApplication tvApp = new AppComponents.RibbonApplication("RibbonTVProg", "Стрічка: Телепрограма", AppComponents.RibbonApplication.ApplicationRole.CLEINT);
+    
+    /**
      * Main method
      * @param args the command line arguments
      */
