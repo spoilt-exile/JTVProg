@@ -107,3 +107,11 @@ Changes:
    tv program;
  - some old code cleanup;
 ==========================================================================================
+JTVProg v0.3r5 (Jun 26th 2013)
+
+Changes:
+ * update help information;
+
+Fixes:
+ X one more fix for previous button in input list;
+==========================================================================================

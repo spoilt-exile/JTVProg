@@ -203,6 +203,9 @@ public class inputFrame extends javax.swing.JFrame {
         if (this.nextBut.getText().equals("Завершить X")) {
             this.nextBut.setText("Следующий >>");
         }
+        if (JTVProg.configer.ChannelProcessor.currentIndex == 1) {
+            this.prevBut.setEnabled(false);
+        }
     }//GEN-LAST:event_prevButActionPerformed
 
     private void pasteButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteButActionPerformed
