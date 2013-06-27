@@ -114,11 +114,13 @@ public class JTVProg {
                 break;
         }
         if (component instanceof String) {
-            System.out.println("["+ component + "]: " + typeStr + ">> '" + message + "';");
+            //System.out.println("["+ component + "]: " + typeStr + ">> '" + message + "';");
+            JTVProg.tvApp.log(type, message);
             logWindow.append(String.valueOf(component), type, message);
         }
         else{
-            System.out.println("["+ component.getClass().toString().substring(14) + "]: " + typeStr + ">> '" + message + "';");
+            //System.out.println("["+ component.getClass().toString().substring(14) + "]: " + typeStr + ">> '" + message + "';");
+            JTVProg.tvApp.log(type, message);
             logWindow.append(component.getClass().toString().substring(14), type, message);
         }
     }

@@ -112,6 +112,8 @@ public class mainFrame extends javax.swing.JFrame {
         tvchSettings = new javax.swing.JMenuItem();
         tvchReleaseOrder = new javax.swing.JMenuItem();
         tvFillFromFile = new javax.swing.JCheckBoxMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        ribbonItem = new javax.swing.JMenuItem();
         tvActions = new javax.swing.JMenu();
         tvOldRelease = new javax.swing.JMenuItem();
         tvReset = new javax.swing.JMenuItem();
@@ -206,6 +208,15 @@ public class mainFrame extends javax.swing.JFrame {
 
         tvFillFromFile.setText("Брать текст из файла");
         tvSettings.add(tvFillFromFile);
+        tvSettings.add(jSeparator1);
+
+        ribbonItem.setText("Настройки выпуска в систему");
+        ribbonItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ribbonItemActionPerformed(evt);
+            }
+        });
+        tvSettings.add(ribbonItem);
 
         tvBar.add(tvSettings);
 
@@ -384,6 +395,18 @@ public class mainFrame extends javax.swing.JFrame {
         this.initReleaseWindow();
     }//GEN-LAST:event_tvOldReleaseActionPerformed
 
+    private void ribbonItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ribbonItemActionPerformed
+        Thread loginer = new Thread() {
+            @Override
+            public void run() {
+                JTVProg.tvApp.connect(AppComponents.NetWorker.class);
+            }
+        };
+        loginer.start();
+        RibbonTVSettings setDialog = new RibbonTVSettings(this, true);
+        setDialog.setVisible(true);
+    }//GEN-LAST:event_ribbonItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -422,6 +445,8 @@ public class mainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton exitBut;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JMenuItem ribbonItem;
     private javax.swing.JCheckBoxMenuItem showLogBox;
     private javax.swing.JMenuItem tvAbout;
     private javax.swing.JMenu tvActions;
