@@ -396,15 +396,26 @@ public class mainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_tvOldReleaseActionPerformed
 
     private void ribbonItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ribbonItemActionPerformed
+        if (JTVProg.tvApp.isInited) {
+            RibbonTVSettings setDialog = new RibbonTVSettings(JTVProg.mainWindow, true);
+            setDialog.setVisible(true);
+        } else {
         Thread loginer = new Thread() {
-            @Override
-            public void run() {
-                JTVProg.tvApp.connect(AppComponents.NetWorker.class);
-            }
-        };
-        loginer.start();
-        RibbonTVSettings setDialog = new RibbonTVSettings(this, true);
-        setDialog.setVisible(true);
+                @Override
+                public void run() {
+                    JTVProg.tvApp.connect(AppComponents.NetWorker.class, new Runnable() {
+
+                        @Override
+                        public void run() {
+                            RibbonTVSettings setDialog = new RibbonTVSettings(JTVProg.mainWindow, true);
+                            setDialog.setVisible(true);
+                        }
+
+                    });
+                }
+            };
+            loginer.start();
+        }
     }//GEN-LAST:event_ribbonItemActionPerformed
 
     /**
