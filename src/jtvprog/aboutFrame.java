@@ -44,15 +44,15 @@ public class aboutFrame extends javax.swing.JDialog {
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jtvprog/jtvprog-mlogo.png"))); // NOI18N
 
         jLabel2.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabel2.setText("Обработчик телепрограммы");
+        jLabel2.setText("Система \"Стрічка\": Обработчик телепрограммы");
 
-        jLabel3.setText("Текущая версия: 0.3r5");
+        jLabel3.setText("Текущая версия: a2 DEV");
 
         jLabel4.setText("© УНИА Укринформ 2011-2013.");
 
+        jTextArea1.setEditable(false);
         jTextArea1.setBackground(javax.swing.UIManager.getDefaults().getColor("windowBorder"));
         jTextArea1.setColumns(20);
-        jTextArea1.setEditable(false);
         jTextArea1.setRows(5);
         jTextArea1.setText("Автор: Непочатов Станислав\n\nРаспространение программы \nна условиях лицензии GNU GPLv2.");
         jTextArea1.setDisabledTextColor(new java.awt.Color(0, 0, 0));

@@ -9,6 +9,10 @@ package jtvprog;
  * @author Stanislav Nepochatov <spoilt.exile@gmail.com>
  */
 public class RibbonTVSettings extends javax.swing.JDialog {
+    
+    private Boolean initRun = true;
+    
+    private java.util.Properties releaseProps;
 
     /**
      * Creates new form RibbonTVSettings
@@ -16,6 +20,13 @@ public class RibbonTVSettings extends javax.swing.JDialog {
     public RibbonTVSettings(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        releaseProps = JTVProg.tvApp.getProperties("Release.properties", JTVProg.class.getResourceAsStream("Release.properties"));
+        this.channelRelease.setSelected(Boolean.parseBoolean(releaseProps.getProperty("release_channel")));
+        this.dayRelease.setSelected(Boolean.parseBoolean(releaseProps.getProperty("release_day")));
+        this.channelDirs.setText(releaseProps.getProperty("release_chn_dir"));
+        this.dayDirs.setText(releaseProps.getProperty("release_day_dir"));
+        this.allowPassedChRelease.setSelected(Boolean.parseBoolean(releaseProps.getProperty("release_aloow_incomplete")));
+        initRun = false;
     }
 
     /**
@@ -41,6 +52,11 @@ public class RibbonTVSettings extends javax.swing.JDialog {
         setResizable(false);
 
         channelRelease.setText("Выпуск по каналам");
+        channelRelease.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                channelReleaseItemStateChanged(evt);
+            }
+        });
 
         channelDirBut.setText("Выбрать");
         channelDirBut.setEnabled(false);
@@ -49,6 +65,11 @@ public class RibbonTVSettings extends javax.swing.JDialog {
         dayDirs.setText("[]");
 
         dayRelease.setText("Выпуск по дням");
+        dayRelease.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                dayReleaseItemStateChanged(evt);
+            }
+        });
 
         channelDirs.setEditable(false);
         channelDirs.setText("[]");
@@ -57,11 +78,21 @@ public class RibbonTVSettings extends javax.swing.JDialog {
         dayDirBut.setEnabled(false);
 
         allowPassedChRelease.setText("Позволить выпускать в систему неполную телепрограмму");
+        allowPassedChRelease.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                allowPassedChReleaseItemStateChanged(evt);
+            }
+        });
 
         cancelBut.setText("Отменить");
 
         saveBut.setText("Сохранить");
         saveBut.setToolTipText("");
+        saveBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -117,6 +148,31 @@ public class RibbonTVSettings extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void channelReleaseItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_channelReleaseItemStateChanged
+        if (!this.initRun) {
+            this.releaseProps.setProperty("release_channel", Boolean.toString(this.channelRelease.isSelected()));
+        }
+        this.channelDirBut.setEnabled(this.channelRelease.isSelected());
+    }//GEN-LAST:event_channelReleaseItemStateChanged
+
+    private void dayReleaseItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_dayReleaseItemStateChanged
+        if (!this.initRun) {
+            this.releaseProps.setProperty("release_day", Boolean.toString(this.dayRelease.isSelected()));
+        }
+        this.dayDirBut.setEnabled(this.dayRelease.isSelected());
+    }//GEN-LAST:event_dayReleaseItemStateChanged
+
+    private void saveButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButActionPerformed
+        JTVProg.tvApp.storeProperties("Release.properties", releaseProps);
+        this.dispose();
+    }//GEN-LAST:event_saveButActionPerformed
+
+    private void allowPassedChReleaseItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_allowPassedChReleaseItemStateChanged
+        if (!this.initRun) {
+            this.releaseProps.setProperty("release_aloow_incomplete", Boolean.toString(this.allowPassedChRelease.isSelected()));
+        }
+    }//GEN-LAST:event_allowPassedChReleaseItemStateChanged
 
     /**
      * @param args the command line arguments

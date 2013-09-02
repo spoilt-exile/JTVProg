@@ -91,6 +91,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="&#x412;&#x44b;&#x43f;&#x443;&#x441;&#x43a; &#x43f;&#x43e; &#x43a;&#x430;&#x43d;&#x430;&#x43b;&#x430;&#x43c;"/>
       </Properties>
+      <Events>
+        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="channelReleaseItemStateChanged"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="channelDirBut">
       <Properties>
@@ -108,6 +111,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="&#x412;&#x44b;&#x43f;&#x443;&#x441;&#x43a; &#x43f;&#x43e; &#x434;&#x43d;&#x44f;&#x43c;"/>
       </Properties>
+      <Events>
+        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="dayReleaseItemStateChanged"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="channelDirs">
       <Properties>
@@ -125,6 +131,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="&#x41f;&#x43e;&#x437;&#x432;&#x43e;&#x43b;&#x438;&#x442;&#x44c; &#x432;&#x44b;&#x43f;&#x443;&#x441;&#x43a;&#x430;&#x442;&#x44c; &#x432; &#x441;&#x438;&#x441;&#x442;&#x435;&#x43c;&#x443; &#x43d;&#x435;&#x43f;&#x43e;&#x43b;&#x43d;&#x443;&#x44e; &#x442;&#x435;&#x43b;&#x435;&#x43f;&#x440;&#x43e;&#x433;&#x440;&#x430;&#x43c;&#x43c;&#x443;"/>
       </Properties>
+      <Events>
+        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="allowPassedChReleaseItemStateChanged"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="cancelBut">
       <Properties>
@@ -136,6 +145,9 @@
         <Property name="text" type="java.lang.String" value="&#x421;&#x43e;&#x445;&#x440;&#x430;&#x43d;&#x438;&#x442;&#x44c;"/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveButActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
