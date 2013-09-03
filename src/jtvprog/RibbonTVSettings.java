@@ -28,6 +28,18 @@ public class RibbonTVSettings extends javax.swing.JDialog {
         this.allowPassedChRelease.setSelected(Boolean.parseBoolean(releaseProps.getProperty("release_aloow_incomplete")));
         initRun = false;
     }
+    
+    /**
+     * Unlock this buttons.
+     */
+    public void unlockButs() {
+        if (this.channelRelease.isSelected()) {
+            this.channelDirBut.setEnabled(true);
+        }
+        if (this.dayRelease.isSelected()) {
+            this.dayDirBut.setEnabled(true);
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify this code. The content of this method is always
@@ -60,6 +72,11 @@ public class RibbonTVSettings extends javax.swing.JDialog {
 
         channelDirBut.setText("Выбрать");
         channelDirBut.setEnabled(false);
+        channelDirBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                channelDirButActionPerformed(evt);
+            }
+        });
 
         dayDirs.setEditable(false);
         dayDirs.setText("[]");
@@ -76,6 +93,11 @@ public class RibbonTVSettings extends javax.swing.JDialog {
 
         dayDirBut.setText("Выбрать");
         dayDirBut.setEnabled(false);
+        dayDirBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dayDirButActionPerformed(evt);
+            }
+        });
 
         allowPassedChRelease.setText("Позволить выпускать в систему неполную телепрограмму");
         allowPassedChRelease.addItemListener(new java.awt.event.ItemListener() {
@@ -164,6 +186,8 @@ public class RibbonTVSettings extends javax.swing.JDialog {
     }//GEN-LAST:event_dayReleaseItemStateChanged
 
     private void saveButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButActionPerformed
+        this.releaseProps.setProperty("release_chn_dir", this.channelDirs.getText());
+        this.releaseProps.setProperty("release_day_dir", this.dayDirs.getText());
         JTVProg.tvApp.storeProperties("Release.properties", releaseProps);
         this.dispose();
     }//GEN-LAST:event_saveButActionPerformed
@@ -173,6 +197,42 @@ public class RibbonTVSettings extends javax.swing.JDialog {
             this.releaseProps.setProperty("release_aloow_incomplete", Boolean.toString(this.allowPassedChRelease.isSelected()));
         }
     }//GEN-LAST:event_allowPassedChReleaseItemStateChanged
+
+    private void channelDirButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_channelDirButActionPerformed
+        final RibbonDirFrame dirFrame = new RibbonDirFrame(this, channelDirs);
+        this.channelDirBut.setEnabled(false);
+        this.dayDirBut.setEnabled(false);
+        Thread dirConfig = new Thread() {
+            @Override
+            public void run() {
+                dirFrame.setVisible(true);
+            }
+        };
+        dirConfig.start();
+        do {
+            try {
+                dirConfig.join(250);
+            } catch (InterruptedException ex) {}
+        } while (dirConfig.isAlive());
+    }//GEN-LAST:event_channelDirButActionPerformed
+
+    private void dayDirButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dayDirButActionPerformed
+        final RibbonDirFrame dirFrame = new RibbonDirFrame(this, this.dayDirs);
+        this.channelDirBut.setEnabled(false);
+        this.dayDirBut.setEnabled(false);
+        Thread dirConfig = new Thread() {
+            @Override
+            public void run() {
+                dirFrame.setVisible(true);
+            }
+        };
+        dirConfig.start();
+        do {
+            try {
+                dirConfig.join(250);
+            } catch (InterruptedException ex) {}
+        } while (dirConfig.isAlive());
+    }//GEN-LAST:event_dayDirButActionPerformed
 
     /**
      * @param args the command line arguments

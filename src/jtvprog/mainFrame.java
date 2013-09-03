@@ -397,7 +397,7 @@ public class mainFrame extends javax.swing.JFrame {
 
     private void ribbonItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ribbonItemActionPerformed
         if (JTVProg.tvApp.isInited) {
-            RibbonTVSettings setDialog = new RibbonTVSettings(JTVProg.mainWindow, true);
+            RibbonTVSettings setDialog = new RibbonTVSettings(JTVProg.mainWindow, false);
             setDialog.setVisible(true);
         } else {
         Thread loginer = new Thread() {
@@ -407,7 +407,7 @@ public class mainFrame extends javax.swing.JFrame {
 
                         @Override
                         public void run() {
-                            RibbonTVSettings setDialog = new RibbonTVSettings(JTVProg.mainWindow, true);
+                            RibbonTVSettings setDialog = new RibbonTVSettings(JTVProg.mainWindow, false);
                             setDialog.setVisible(true);
                         }
 
