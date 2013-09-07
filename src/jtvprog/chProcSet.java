@@ -247,7 +247,7 @@ public class chProcSet extends chSet{
      * @param index index of unit
      * @return chProcUnit object
      */
-    private chProcUnit getUnit(Integer index) {
+    public chProcUnit getUnit(Integer index) {
         chProcUnit returnedUnit = new chProcUnit();
         if (currentState == states.INPUT) {
             java.util.ListIterator<chProcUnit> chIter = chProcList.listIterator();

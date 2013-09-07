@@ -63,6 +63,7 @@ public class outputFrame extends javax.swing.JDialog {
         modeBox = new javax.swing.JComboBox();
         jScrollPane2 = new javax.swing.JScrollPane();
         releaseList = new javax.swing.JList();
+        ribbonReleaseBut = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Выпуск телепрограммы");
@@ -98,7 +99,7 @@ public class outputFrame extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(outPrevBut)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -137,15 +138,23 @@ public class outputFrame extends javax.swing.JDialog {
         });
         jScrollPane2.setViewportView(releaseList);
 
+        ribbonReleaseBut.setText("Выпустить в систему");
+        ribbonReleaseBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ribbonReleaseButActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+            .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
-                    .addComponent(modeBox, javax.swing.GroupLayout.Alignment.LEADING, 0, 179, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(modeBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ribbonReleaseBut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -154,7 +163,9 @@ public class outputFrame extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(modeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(ribbonReleaseBut)
                 .addContainerGap())
         );
 
@@ -207,6 +218,38 @@ public class outputFrame extends javax.swing.JDialog {
         JTVProg.configer.ChannelProcessor.outputPrev();
         this.releaseList.setSelectedIndex(JTVProg.configer.ChannelProcessor.currentIndex);
     }//GEN-LAST:event_outPrevButActionPerformed
+
+    private void ribbonReleaseButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ribbonReleaseButActionPerformed
+        final RibbonReleaser releaser = new RibbonReleaser();
+        Object[] options = {"Выпустить", "Отмена"};
+        Integer result = javax.swing.JOptionPane.showOptionDialog(this,
+            releaser.renderMessage(),
+            "Выпуск в систему...",
+            javax.swing.JOptionPane.YES_NO_CANCEL_OPTION,
+            javax.swing.JOptionPane.QUESTION_MESSAGE,
+            null,
+            options,
+            options[1]);
+        if (result.equals(1)) {
+            return;
+        }
+        if (JTVProg.tvApp.isInited) {
+            releaser.release();
+        } else {
+            JTVProg.tvApp.connect(AppComponents.NetWorker.class, new Runnable() {
+
+                @Override
+                public void run() {
+                    releaser.release();
+                    String resStat = releaser.getStatus();
+                    if (resStat != null) {
+                        JTVProg.warningMessage(resStat);
+                    }
+                }
+                
+            });
+        }
+    }//GEN-LAST:event_ribbonReleaseButActionPerformed
 
     /**
      * @param args the command line arguments
@@ -263,5 +306,6 @@ public class outputFrame extends javax.swing.JDialog {
     private javax.swing.JLabel releaseLabel;
     private javax.swing.JList releaseList;
     private javax.swing.JTextArea releaseText;
+    private javax.swing.JButton ribbonReleaseBut;
     // End of variables declaration//GEN-END:variables
 }
