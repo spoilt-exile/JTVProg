@@ -65,7 +65,7 @@ public class RibbonReleaser {
             return;
         }
         if (this.channelRelease) {
-            for (int chIndex = 1; chIndex < JTVProg.configer.ChannelProcessor.getSetSize(); chIndex++) {
+            for (int chIndex = 1; chIndex < JTVProg.configer.ChannelProcessor.getSetSize() + 1; chIndex++) {
                 jtvprog.chProcSet.chProcUnit currChannel = JTVProg.configer.ChannelProcessor.getUnit(chIndex);
                 if (!currChannel.isPassedNull) {
                     String res = this.release(currChannel.chName, currChannel.chStored, this.releaseProps.getProperty("release_chn_dir"));
@@ -76,10 +76,10 @@ public class RibbonReleaser {
                         return;
                     }
                 }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {}
             }
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {}
         }
     }
     
