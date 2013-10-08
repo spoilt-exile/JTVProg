@@ -1,13 +1,32 @@
-JTVProg readme
+Інформаційна система "Стрічка" - обробник телепрограми
 
-Current version: v0.3r5 (Jun 26th 2013)
+Версія: a2 slice-2
 
-JTVProg is a service application which developed in National News Agency of Ukraine 
-(Ukrinform) for prepearing, processing and releasing TV program. Source code of this 
-application is distributing under terms of GNU GPLv2 license (see LICENSE file).
+ПРО СИСТЕМУ "СТРІЧКА"
 
-*See changelog at CHANGELOG file.
+Система "Стрічка" - це новітня система обробки повідомлень для 
+інформаційних агентств та інших видань.
 
-COPYRIGHT
+Докладніше про систему "Стрічка" можно повідати зі 
+специфікацій у репозиторії RibbonSpecs.
 
-© Ukrinform 2011-2013.
+https://github.com/spoilt-exile/RibbonSpecs
+
+ПРО ЦЕЙ РЕПОЗИТОРІЙ
+
+Цей репозиторій містить утиліти для підготовки та обробки 
+тексту програми телепередач. Утиліта має можливість випускати
+повідомлення з текстом телепередач на напрямки системи 
+"Стрічка". Кодова база відповідає JTVProg v0.3r5.
+
+ЗАЛЕЖНОСТІ
+
+libRibbonApp - бібліотека ядра програми;
+libRibbonData - бібліотека структур даних;
+
+АВТОРСЬКІ ПРАВА ТА УМОВИ РОЗПОВСЮДЖЕННЯ
+
+Код системи розповсюджується за ліцензією GNU GPLv2 або за 
+умовами більш нової ліцензії GNU GPL.
+
+© Непочатов Станіслав 2012-2013.

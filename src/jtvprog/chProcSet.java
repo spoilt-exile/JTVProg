@@ -158,7 +158,7 @@ public class chProcSet extends chSet{
     /**
      * Channel processing unit
      */
-    protected class chProcUnit extends chEntry {
+    public class chProcUnit extends chEntry {
         
         /**
          * Empty constructor

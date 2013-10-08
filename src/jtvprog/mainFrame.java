@@ -6,6 +6,8 @@
 
 package jtvprog;
 
+import ribbon.RibbonTVSettings;
+
 /**
  * Class of main JTVProg window
  * @author Stanislav Nepochatov

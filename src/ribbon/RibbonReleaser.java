@@ -2,7 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package jtvprog;
+package ribbon;
+
+import jtvprog.JTVProg;
 
 /**
  * Release TV program to Ribbon system.
