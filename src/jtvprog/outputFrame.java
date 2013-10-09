@@ -8,6 +8,8 @@ package jtvprog;
 
 import ribbon.RibbonReleaser;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /**
  * Release window class
@@ -242,9 +244,12 @@ public class outputFrame extends javax.swing.JDialog {
                 @Override
                 public void run() {
                     releaser.release();
-                    String resStat = releaser.getStatus();
-                    if (resStat != null) {
-                        JTVProg.warningMessage(resStat);
+                    Boolean resStat = releaser.getErrStatus();
+                    if (resStat) {
+                        JTVProg.warningMessage(releaser.getStatus());
+                    } else {
+                        final JPanel panel = new JPanel();
+                        JOptionPane.showMessageDialog(panel, releaser.getStatus(), "Выпуск", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
                 

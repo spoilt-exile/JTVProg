@@ -29,6 +29,7 @@ public class RibbonTVSettings extends javax.swing.JDialog {
         this.channelDirs.setText(releaseProps.getProperty("release_chn_dir"));
         this.dayDirs.setText(releaseProps.getProperty("release_day_dir"));
         this.allowPassedChRelease.setSelected(Boolean.parseBoolean(releaseProps.getProperty("release_aloow_incomplete")));
+        this.userLable.setText("Текущий пользователь: " + JTVProg.tvApp.CURR_LOGIN);
         initRun = false;
     }
     
@@ -61,6 +62,8 @@ public class RibbonTVSettings extends javax.swing.JDialog {
         allowPassedChRelease = new javax.swing.JCheckBox();
         cancelBut = new javax.swing.JButton();
         saveBut = new javax.swing.JButton();
+        userLable = new javax.swing.JLabel();
+        reloginBut = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Настройки выпуска в систему \"Стрічка\"");
@@ -119,6 +122,15 @@ public class RibbonTVSettings extends javax.swing.JDialog {
             }
         });
 
+        userLable.setText("Текущий пользователь:");
+
+        reloginBut.setText("Сменить пользователя");
+        reloginBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reloginButActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -126,8 +138,10 @@ public class RibbonTVSettings extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(userLable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(reloginBut)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(saveBut)
                         .addGap(18, 18, 18)
                         .addComponent(cancelBut))
@@ -146,7 +160,7 @@ public class RibbonTVSettings extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(dayDirBut))
                             .addComponent(allowPassedChRelease))
-                        .addGap(0, 4, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -164,10 +178,13 @@ public class RibbonTVSettings extends javax.swing.JDialog {
                     .addComponent(dayRelease))
                 .addGap(18, 18, 18)
                 .addComponent(allowPassedChRelease)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addComponent(userLable)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelBut)
-                    .addComponent(saveBut))
+                    .addComponent(saveBut)
+                    .addComponent(reloginBut))
                 .addContainerGap())
         );
 
@@ -237,6 +254,18 @@ public class RibbonTVSettings extends javax.swing.JDialog {
         } while (dirConfig.isAlive());
     }//GEN-LAST:event_dayDirButActionPerformed
 
+    private void reloginButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reloginButActionPerformed
+      new Thread() {
+            @Override
+            public void run() {
+                UIComponents.LoginWindow loginFrame = new UIComponents.LoginWindow(JTVProg.tvApp, null);
+                loginFrame.setVisible(true);
+                loginFrame.waitForClose();
+                userLable.setText("Текущий пользователь: " + JTVProg.tvApp.CURR_LOGIN);
+            }
+        }.start();
+    }//GEN-LAST:event_reloginButActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -287,6 +316,8 @@ public class RibbonTVSettings extends javax.swing.JDialog {
     private javax.swing.JButton dayDirBut;
     private javax.swing.JTextField dayDirs;
     private javax.swing.JCheckBox dayRelease;
+    private javax.swing.JButton reloginBut;
     private javax.swing.JButton saveBut;
+    private javax.swing.JLabel userLable;
     // End of variables declaration//GEN-END:variables
 }

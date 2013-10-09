@@ -33,6 +33,12 @@ public class RibbonReleaser {
     private Boolean allowIncomplete;
     
     /**
+     * Display if current status string is error or just message. 
+     * By default equal <code>false</code> (status is message).
+     */
+    private Boolean errStatus = false;
+    
+    /**
      * Status of execution.
      */
     private String status;
@@ -52,7 +58,7 @@ public class RibbonReleaser {
      * @return formatted message;
      */
     public String renderMessage() {
-        return "Параметры выпуска:\n"
+        return "Текущий пользователь: " + JTVProg.tvApp.CURR_LOGIN + "\n\nПараметры выпуска:\n"
                 + (this.channelRelease ? "Выпуск каналов разрешен: " + this.releaseProps.getProperty("release_chn_dir") + "\n" : "Выпуск каналов отключен\n") 
                 + (this.dayRelease ? "Выпуск по дням разрешен: " + this.releaseProps.getProperty("release_day_dir") + "\n" : "Выпуск по дням отключен\n")
                 + (this.allowIncomplete ? "Неполный выпуск разрешен." : "Неполный выпуск запрещен!");
@@ -64,6 +70,7 @@ public class RibbonReleaser {
     public void release() {
         if (!this.allowIncomplete && JTVProg.isPass()) {
             this.status = "Невозможно выпустить: пропущены каналы!";
+            this.errStatus = true;
             return;
         }
         if (this.channelRelease) {
@@ -75,6 +82,7 @@ public class RibbonReleaser {
                         JTVProg.warningMessage("Ошибка выпуска канала " + currChannel.chName + "\n\nОтвет системы:\n"
                                 + Generic.CsvFormat.parseDoubleStruct(res)[1]);
                         this.status = currChannel.chName + ": " + Generic.CsvFormat.parseDoubleStruct(res)[1];
+                        this.errStatus = true;
                         return;
                     }
                 }
@@ -92,6 +100,7 @@ public class RibbonReleaser {
                     JTVProg.warningMessage("Ошибка выпуска дня " + JTVProg.configer.ChannelProcessor.daysHeaders[dayIndex] + "\n\nОтвет системы:\n"
                             + Generic.CsvFormat.parseDoubleStruct(res)[1]);
                     this.status = JTVProg.configer.ChannelProcessor.daysHeaders[dayIndex] + ": " + Generic.CsvFormat.parseDoubleStruct(res)[1];
+                    this.errStatus = true;
                     return;
                 }
                 try {
@@ -99,6 +108,7 @@ public class RibbonReleaser {
                 } catch (InterruptedException ex) {}
             }
         }
+        this.status = "Выпуск текста телепрограммы удачно завершен.";
     }
     
     /**
@@ -124,9 +134,17 @@ public class RibbonReleaser {
     
     /**
      * Return status of releasing.
-     * @return string or null;
+     * @return status string value;
      */
     public String getStatus() {
         return this.status;
+    }
+    
+    /**
+     * Return error flag of this releaing.
+     * @return error flag value;
+     */
+    public Boolean getErrStatus() {
+        return this.errStatus;
     }
 }
