@@ -77,12 +77,12 @@ public class chProcSet extends chSet{
     /**
      * Files for day release
      */
-    private java.io.File[] outDays = new java.io.File[7];
+    public java.io.File[] outDays = new java.io.File[7];
     
     /**
      * 
      */
-    private String[] daysHeaders = new String[7]; 
+    public String[] daysHeaders = new String[7]; 
     
     /**
      * Array of string constants for days of week
@@ -278,7 +278,7 @@ public class chProcSet extends chSet{
      * @param fileObj file descriptor object
      * @return string content of given file object
      */
-    private String getFileContent(java.io.File fileObj) {
+    public String getFileContent(java.io.File fileObj) {
         String returned = "";
         try {
             java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader(fileObj));

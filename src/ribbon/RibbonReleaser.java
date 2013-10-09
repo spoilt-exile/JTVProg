@@ -83,6 +83,22 @@ public class RibbonReleaser {
                 } catch (InterruptedException ex) {}
             }
         }
+        if (this.dayRelease) {
+            for (int dayIndex = 0; dayIndex < 7; dayIndex++) {
+                String res = this.release(JTVProg.configer.ChannelProcessor.daysHeaders[dayIndex], 
+                        JTVProg.configer.ChannelProcessor.getFileContent(JTVProg.configer.ChannelProcessor.outDays[dayIndex]), 
+                        this.releaseProps.getProperty("release_day_dir"));
+                if (res.contains("RIBBON_ERROR:")) {
+                    JTVProg.warningMessage("Ошибка выпуска дня " + JTVProg.configer.ChannelProcessor.daysHeaders[dayIndex] + "\n\nОтвет системы:\n"
+                            + Generic.CsvFormat.parseDoubleStruct(res)[1]);
+                    this.status = JTVProg.configer.ChannelProcessor.daysHeaders[dayIndex] + ": " + Generic.CsvFormat.parseDoubleStruct(res)[1];
+                    return;
+                }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {}
+            }
+        }
     }
     
     /**
