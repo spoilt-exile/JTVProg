@@ -115,3 +115,9 @@ Changes:
 Fixes:
  X one more fix for previous button in input list;
 ==========================================================================================
+JTVProg a2 (Oct 27th 2013)
+
+Changes:
+ + add Ribbon integration code;
+ * change version number to Ribbon version style;
+==========================================================================================
